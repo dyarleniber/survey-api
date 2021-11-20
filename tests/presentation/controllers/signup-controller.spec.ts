@@ -1,8 +1,11 @@
-import { SignUpController } from '../../../src/presentation/controllers';
-import { EmailValidator } from '../../../src/presentation/protocols';
-import { MissingParamError, InvalidParamError, ServerError } from '../../../src/presentation/errors';
-import { AccountModel } from '../../../src/domain/models/account';
-import { AddAccount, AddAccountModel } from '../../../src/domain/use-cases/add-account';
+import { SignUpController } from '../../../src/presentation/controllers/signup/signup-controller';
+import {
+  EmailValidator,
+  AccountModel,
+  AddAccount,
+  AddAccountModel,
+} from '../../../src/presentation/controllers/signup/signup-protocols';
+import { InvalidParamError, MissingParamError, ServerError } from '../../../src/presentation/errors';
 
 const makeEmailValidator = (): EmailValidator => {
   class EmailValidatorStub implements EmailValidator {
@@ -16,13 +19,12 @@ const makeEmailValidator = (): EmailValidator => {
 const makeAddAccount = (): AddAccount => {
   class AddAccountStub implements AddAccount {
     add(_account: AddAccountModel): AccountModel {
-      const fakeAccount = {
+      return {
         id: 'valid_id',
         name: 'valid_name',
         email: 'valid_email@mail.com',
         password: 'valid_password',
       };
-      return fakeAccount;
     }
   }
   return new AddAccountStub();
