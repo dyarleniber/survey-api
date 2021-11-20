@@ -16,6 +16,16 @@
         "@typescript-eslint"
     ],
     "ignorePatterns": ["jest.config.js"],
+    "settings": {
+        "import/resolver": {
+            "node": {
+                "extensions": [
+                    ".ts",
+                    ".js"
+                ]
+            }
+        }
+    },
     "rules": {
         "import/extensions": "off",
         "import/prefer-default-export": "off",
