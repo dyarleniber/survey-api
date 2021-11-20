@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
+    "test:staged": "jest",
     "lint": "eslint --ignore-path .gitignore --ext .ts,.js --fix",
     "prepare": "husky install"
   },
@@ -28,7 +29,8 @@
   },
   "lint-staged": {
     "*.{ts,js}": [
-      "npm run lint"
+      "npm run lint",
+      "npm run test:staged"
     ]
   }
 }
