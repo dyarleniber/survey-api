@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --passWithNoTests --noStackTrace --runInBand",
+    "test": "jest --passWithNoTests --runInBand",
     "test:unit": "npm run test -- -c jest-unit.config.js",
     "test:integration": "npm run test -- -c jest-integration.config.js",
     "test:staged": "npm run test -- --findRelatedTests",
@@ -19,7 +19,6 @@
     "@shelf/jest-mongodb": "^2.1.0",
     "@types/bcrypt": "^5.0.0",
     "@types/jest": "^27.0.3",
-    "@types/mongodb": "^4.0.7",
     "@types/node": "^16.11.9",
     "@types/validator": "^13.7.0",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
