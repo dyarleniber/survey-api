@@ -1,16 +1,12 @@
 import { LogControllerDecorator } from '../../../src/main/decorators/log-controller-decorator';
 import { Controller, HttpRequest, HttpResponse } from '../../../src/presentation/protocols';
 import { LogErrorRepository } from '../../../src/data/protocols/log-error-repository';
-import { serverError } from '../../../src/presentation/helpers';
+import { serverError, ok } from '../../../src/presentation/helpers';
 
 const makeController = (): Controller => {
   class ControllerStub implements Controller {
     async handle(_data: HttpRequest): Promise<HttpResponse> {
-      const httpResponse: HttpResponse = {
-        statusCode: 200,
-        body: 'any_body',
-      };
-      return Promise.resolve(httpResponse);
+      return Promise.resolve(ok('any_body'));
     }
   }
   return new ControllerStub();
@@ -23,6 +19,21 @@ const makeLogErrorRepository = (): LogErrorRepository => {
     }
   }
   return new LogErrorRepositoryStub();
+};
+
+const makeFakeRequest = (): HttpRequest => ({
+  body: {
+    name: 'any_name',
+    email: 'any_email@mail.com',
+    password: 'any_password',
+    passwordConfirmation: 'any_password',
+  },
+});
+
+const makeFakeServerError = (): HttpResponse => {
+  const fakeError = new Error();
+  fakeError.stack = 'any_stack';
+  return serverError(fakeError);
 };
 
 interface SutTypes {
@@ -42,51 +53,21 @@ describe('LogController Decorator', () => {
   test('Should call controller handle', async () => {
     const { sut, controllerStub } = makeSut();
     const handleSpy = jest.spyOn(controllerStub, 'handle');
-    const httpRequest: HttpRequest = {
-      body: {
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        password: 'any_password',
-        passwordConfirmation: 'any_password',
-      },
-    };
-    await sut.handle(httpRequest);
-    expect(handleSpy).toHaveBeenCalledWith(httpRequest);
+    await sut.handle(makeFakeRequest());
+    expect(handleSpy).toHaveBeenCalledWith(makeFakeRequest());
   });
 
   test('Should return the same result of the controller', async () => {
     const { sut } = makeSut();
-    const httpRequest: HttpRequest = {
-      body: {
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        password: 'any_password',
-        passwordConfirmation: 'any_password',
-      },
-    };
-    const httpResponse = await sut.handle(httpRequest);
-    expect(httpResponse).toEqual({
-      statusCode: 200,
-      body: 'any_body',
-    });
+    const httpResponse = await sut.handle(makeFakeRequest());
+    expect(httpResponse).toEqual(ok('any_body'));
   });
 
   test('Should call LogErrorRepository with correct error if controller returns a server error', async () => {
     const { sut, controllerStub, logErrorRepositoryStub } = makeSut();
-    const fakeError = new Error();
-    fakeError.stack = 'any_stack';
-    const error = serverError(fakeError);
-    jest.spyOn(controllerStub, 'handle').mockReturnValueOnce(Promise.resolve(error));
+    jest.spyOn(controllerStub, 'handle').mockReturnValueOnce(Promise.resolve(makeFakeServerError()));
     const logSpy = jest.spyOn(logErrorRepositoryStub, 'log');
-    const httpRequest: HttpRequest = {
-      body: {
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        password: 'any_password',
-        passwordConfirmation: 'any_password',
-      },
-    };
-    await sut.handle(httpRequest);
+    await sut.handle(makeFakeRequest());
     expect(logSpy).toHaveBeenCalledWith('any_stack');
   });
 });
