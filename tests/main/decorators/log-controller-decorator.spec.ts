@@ -1,7 +1,7 @@
 import { LogControllerDecorator } from '../../../src/main/decorators/log-controller-decorator';
 import { Controller, HttpRequest, HttpResponse } from '../../../src/presentation/protocols';
 
-const makeControllerStub = (): Controller => {
+const makeController = (): Controller => {
   class ControllerStub implements Controller {
     async handle(_data: HttpRequest): Promise<HttpResponse> {
       const httpResponse: HttpResponse = {
@@ -20,7 +20,7 @@ interface SutTypes {
 }
 
 const makeSut = (): SutTypes => {
-  const controllerStub = makeControllerStub();
+  const controllerStub = makeController();
   const sut = new LogControllerDecorator(controllerStub);
   return { sut, controllerStub };
 };
@@ -39,5 +39,22 @@ describe('LogController Decorator', () => {
     };
     await sut.handle(httpRequest);
     expect(handleSpy).toHaveBeenCalledWith(httpRequest);
+  });
+
+  test('Should return the same result of the controller', async () => {
+    const { sut } = makeSut();
+    const httpRequest: HttpRequest = {
+      body: {
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        password: 'any_password',
+        passwordConfirmation: 'any_password',
+      },
+    };
+    const httpResponse = await sut.handle(httpRequest);
+    expect(httpResponse).toEqual({
+      statusCode: 200,
+      body: 'any_body',
+    });
   });
 });
