@@ -1,13 +1,13 @@
-import { SignUpController } from '../../../src/presentation/controllers/signup/signup-controller';
+import { SignUpController } from '../../../../src/presentation/controllers/signup/signup-controller';
 import {
   EmailValidator,
   AccountModel,
   AddAccount,
   AddAccountModel,
   HttpRequest,
-} from '../../../src/presentation/controllers/signup/signup-protocols';
-import { InvalidParamError, MissingParamError, ServerError } from '../../../src/presentation/errors';
-import { badRequest, serverError, ok } from '../../../src/presentation/helpers';
+} from '../../../../src/presentation/controllers/signup/signup-protocols';
+import { InvalidParamError, MissingParamError, ServerError } from '../../../../src/presentation/errors';
+import { badRequest, serverError, ok } from '../../../../src/presentation/helpers';
 
 const makeEmailValidator = (): EmailValidator => {
   class EmailValidatorStub implements EmailValidator {
