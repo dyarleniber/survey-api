@@ -1,6 +1,8 @@
 import { LoginController } from '../../../../src/presentation/controllers/login/login-controller';
 import { EmailValidator, Authentication, HttpRequest } from '../../../../src/presentation/controllers/login/login-protocols';
-import { badRequest, serverError, unauthorized } from '../../../../src/presentation/helpers';
+import {
+  badRequest, serverError, unauthorized, ok,
+} from '../../../../src/presentation/helpers';
 import { InvalidParamError, MissingParamError, ServerError } from '../../../../src/presentation/errors';
 
 const makeEmailValidator = (): EmailValidator => {
@@ -100,9 +102,7 @@ describe('Login Controller', () => {
 
   test('Should return 500 if Authentication throws an error', async () => {
     const { sut, authenticationStub } = makeSut();
-    jest.spyOn(authenticationStub, 'auth').mockImplementation(() => {
-      throw new Error();
-    });
+    jest.spyOn(authenticationStub, 'auth').mockImplementation(async () => Promise.reject(new Error()));
     const httpResponse = await sut.handle(makeFakeRequest());
     expect(httpResponse).toEqual(serverError(new ServerError()));
   });
@@ -112,5 +112,11 @@ describe('Login Controller', () => {
     jest.spyOn(authenticationStub, 'auth').mockReturnValueOnce(Promise.resolve(undefined));
     const httpResponse = await sut.handle(makeFakeRequest());
     expect(httpResponse).toEqual(unauthorized());
+  });
+
+  test('Should return 200 if valid credentials are provided', async () => {
+    const { sut } = makeSut();
+    const httpResponse = await sut.handle(makeFakeRequest());
+    expect(httpResponse).toEqual(ok({ accessToken: 'any_token' }));
   });
 });
