@@ -1,7 +1,7 @@
 import { LogControllerDecorator } from '../../../src/main/decorators/log-controller-decorator';
 import { Controller, HttpRequest, HttpResponse } from '../../../src/presentation/protocols';
 import { LogErrorRepository } from '../../../src/data/protocols/log-error-repository';
-import { serverError, ok } from '../../../src/presentation/helpers';
+import { serverError, ok } from '../../../src/presentation/helpers/http/http-helpers';
 
 const makeController = (): Controller => {
   class ControllerStub implements Controller {

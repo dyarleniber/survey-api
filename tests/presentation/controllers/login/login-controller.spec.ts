@@ -3,7 +3,7 @@ import { Authentication, Validation, HttpRequest } from '../../../../src/present
 import { MissingParamError, ServerError } from '../../../../src/presentation/errors';
 import {
   badRequest, serverError, unauthorized, ok,
-} from '../../../../src/presentation/helpers';
+} from '../../../../src/presentation/helpers/http/http-helpers';
 
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {

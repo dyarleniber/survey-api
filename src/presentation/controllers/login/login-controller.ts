@@ -3,7 +3,7 @@ import {
 } from './login-protocols';
 import {
   badRequest, serverError, ok, unauthorized,
-} from '../../helpers';
+} from '../../helpers/http/http-helpers';
 
 export class LoginController implements Controller {
   private readonly authentication: Authentication;

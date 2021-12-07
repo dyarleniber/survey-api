@@ -7,7 +7,7 @@ import {
   HttpRequest,
 } from '../../../../src/presentation/controllers/signup/signup-protocols';
 import { MissingParamError, ServerError } from '../../../../src/presentation/errors';
-import { badRequest, serverError, ok } from '../../../../src/presentation/helpers';
+import { badRequest, serverError, ok } from '../../../../src/presentation/helpers/http/http-helpers';
 
 const makeFakeAccount = (): AccountModel => ({
   id: 'valid_id',
