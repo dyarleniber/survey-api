@@ -1,4 +1,4 @@
-import { RequiredFieldValidation } from '../../../../src/presentation/helpers/validators/required-field-validation';
+import { RequiredFieldValidation } from '../../../../src/presentation/helpers/validators';
 import { MissingParamError } from '../../../../src/presentation/errors';
 
 const makeSut = (): RequiredFieldValidation => new RequiredFieldValidation('any_field');

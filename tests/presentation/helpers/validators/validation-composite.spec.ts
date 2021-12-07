@@ -1,4 +1,4 @@
-import { ValidationComposite } from '../../../../src/presentation/helpers/validators/validation-composite';
+import { ValidationComposite } from '../../../../src/presentation/helpers/validators';
 import { Validation } from '../../../../src/presentation/protocols';
 
 const makeValidation = (): Validation => {

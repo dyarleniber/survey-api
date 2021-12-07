@@ -1,4 +1,4 @@
-import { EmailValidation } from '../../../../src/presentation/helpers/validators/email-validation';
+import { EmailValidation } from '../../../../src/presentation/helpers/validators';
 import { EmailValidator } from '../../../../src/presentation/protocols';
 import { InvalidParamError } from '../../../../src/presentation/errors';
 
