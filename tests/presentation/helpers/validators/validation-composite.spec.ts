@@ -1,5 +1,5 @@
 import { ValidationComposite } from '../../../../src/presentation/helpers/validators/validation-composite';
-import { Validation } from '../../../../src/presentation/helpers/validators/validation';
+import { Validation } from '../../../../src/presentation/protocols';
 
 const makeValidation = (): Validation => {
   class ValidationStub implements Validation {
