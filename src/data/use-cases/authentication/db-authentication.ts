@@ -22,13 +22,12 @@ export class DbAuthentication implements Authentication {
 
   async auth(authentication: AuthenticationModel): Promise<string | null> {
     const account = await this.loadAccountByEmailRepository.load(authentication.email);
-    if (!account) {
-      return null;
+    if (account) {
+      const isValid = await this.hashComparer.compare(authentication.password, account.password);
+      if (isValid) {
+        return this.tokenGenerator.generate(account.id);
+      }
     }
-    const isValid = await this.hashComparer.compare(authentication.password, account.password);
-    if (!isValid) {
-      return null;
-    }
-    return this.tokenGenerator.generate(account.id);
+    return null;
   }
 }
