@@ -1,14 +1,14 @@
 import bcrypt from 'bcrypt';
-import { Encryptor } from '../../data/protocols/cryptography/encryptor';
+import { HashGenerator } from '../../data/protocols/cryptography/hash-generator';
 
-export class BcryptAdapter implements Encryptor {
+export class BcryptAdapter implements HashGenerator {
   private readonly salt: number;
 
   constructor(salt: number) {
     this.salt = salt;
   }
 
-  async encrypt(value: string): Promise<string> {
+  async hash(value: string): Promise<string> {
     return bcrypt.hash(value, this.salt);
   }
 }

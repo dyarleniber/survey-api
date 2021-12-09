@@ -1,15 +1,15 @@
 import { DbAddAccount } from '../../../../src/data/use-cases/add-account/db-add-account';
 import {
-  Encryptor, AccountModel, AddAccountModel, AddAccountRepository,
+  HashGenerator, AccountModel, AddAccountModel, AddAccountRepository,
 } from '../../../../src/data/use-cases/add-account/db-add-account-protocols';
 
-const makeEncryptor = (): Encryptor => {
-  class EncryptorStub implements Encryptor {
-    async encrypt(_value: string): Promise<string> {
+const makeHashGenerator = (): HashGenerator => {
+  class HashGeneratorStub implements HashGenerator {
+    async hash(_value: string): Promise<string> {
       return 'hashed_password';
     }
   }
-  return new EncryptorStub();
+  return new HashGeneratorStub();
 };
 
 const makeFakeAccount = (): AccountModel => ({
@@ -36,32 +36,32 @@ const makeFakeAccountData = (): AddAccountModel => ({
 
 interface SutTypes {
   sut: DbAddAccount;
-  encryptorStub: Encryptor;
+  hashGeneratorStub: HashGenerator;
   addAccountRepositoryStub: AddAccountRepository;
 }
 
 const makeSut = (): SutTypes => {
-  const encryptorStub = makeEncryptor();
+  const hashGeneratorStub = makeHashGenerator();
   const addAccountRepositoryStub = makeAddAccountRepository();
-  const sut = new DbAddAccount(encryptorStub, addAccountRepositoryStub);
+  const sut = new DbAddAccount(hashGeneratorStub, addAccountRepositoryStub);
   return {
     sut,
-    encryptorStub,
+    hashGeneratorStub,
     addAccountRepositoryStub,
   };
 };
 
 describe('DbAddAccount Use case', () => {
-  test('Should call Encryptor with correct password', async () => {
-    const { sut, encryptorStub } = makeSut();
-    const encryptSpy = jest.spyOn(encryptorStub, 'encrypt');
+  test('Should call HashGenerator with correct password', async () => {
+    const { sut, hashGeneratorStub } = makeSut();
+    const hashSpy = jest.spyOn(hashGeneratorStub, 'hash');
     await sut.add(makeFakeAccountData());
-    expect(encryptSpy).toHaveBeenCalledWith('valid_password');
+    expect(hashSpy).toHaveBeenCalledWith('valid_password');
   });
 
-  test('Should throw an error if the Encryptor throws an error', async () => {
-    const { sut, encryptorStub } = makeSut();
-    jest.spyOn(encryptorStub, 'encrypt').mockImplementation(async () => { throw new Error(); });
+  test('Should throw an error if the HashGenerator throws an error', async () => {
+    const { sut, hashGeneratorStub } = makeSut();
+    jest.spyOn(hashGeneratorStub, 'hash').mockImplementation(async () => { throw new Error(); });
     const promise = sut.add(makeFakeAccountData());
     await expect(promise).rejects.toThrow();
   });
