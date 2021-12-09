@@ -6,7 +6,7 @@ import { serverError, ok } from '../../../src/presentation/helpers/http/http-hel
 const makeController = (): Controller => {
   class ControllerStub implements Controller {
     async handle(_data: HttpRequest): Promise<HttpResponse> {
-      return Promise.resolve(ok('any_body'));
+      return ok('any_body');
     }
   }
   return new ControllerStub();

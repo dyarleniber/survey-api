@@ -13,7 +13,7 @@ import {
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
     async auth(_authentication: AuthenticationModel): Promise<string> {
-      return Promise.resolve('any_token');
+      return 'any_token';
     }
   }
   return new AuthenticationStub();
