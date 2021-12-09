@@ -12,7 +12,7 @@ import {
 
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
-    async auth(_authentication: AuthenticationModel): Promise<string | undefined> {
+    async auth(_authentication: AuthenticationModel): Promise<string> {
       return Promise.resolve('any_token');
     }
   }
@@ -72,7 +72,7 @@ describe('Login Controller', () => {
 
   test('Should return 401 if invalid credentials are provided', async () => {
     const { sut, authenticationStub } = makeSut();
-    jest.spyOn(authenticationStub, 'auth').mockReturnValueOnce(Promise.resolve(undefined));
+    jest.spyOn(authenticationStub, 'auth').mockReturnValueOnce(Promise.resolve(null));
     const httpResponse = await sut.handle(makeFakeRequest());
     expect(httpResponse).toEqual(unauthorized());
   });
