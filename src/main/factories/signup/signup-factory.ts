@@ -6,9 +6,10 @@ import { AccountMongoRepository } from '../../../infra/db/mongodb/account/accoun
 import { LogMongoRepository } from '../../../infra/db/mongodb/log/log-mongo-repository';
 import { LogControllerDecorator } from '../../decorators/log-controller-decorator';
 import { makeSignUpValidation } from './signup-validation-factory';
+import env from '../../config/env';
 
 export const makeSignUpController = (): Controller => {
-  const hashGenerator = new BcryptAdapter(12);
+  const hashGenerator = new BcryptAdapter(env.bcryptSalt);
   const addAccountRepository = new AccountMongoRepository();
   const addAccount = new DbAddAccount(hashGenerator, addAccountRepository);
   const validation = makeSignUpValidation();
