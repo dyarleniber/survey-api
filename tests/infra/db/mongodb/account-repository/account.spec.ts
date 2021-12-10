@@ -1,6 +1,6 @@
 import { Collection } from 'mongodb';
-import { MongoHelper } from '../../../../../src/infra/db/mongodb/helpers/mongo-helper';
 import { AccountMongoRepository } from '../../../../../src/infra/db/mongodb/account-repository/account';
+import { MongoHelper } from '../../../../../src/infra/db/mongodb/helpers/mongo-helper';
 
 const makeSut = (): AccountMongoRepository => new AccountMongoRepository();
 
@@ -53,5 +53,18 @@ describe('Account Mongo Repository', () => {
     const sut = makeSut();
     const account = await sut.loadByEmail('wrong_email@mail.com');
     expect(account).toBeFalsy();
+  });
+
+  test('Should update the access token on updateAccessToken success', async () => {
+    const sut = makeSut();
+    const { insertedId } = await accountCollection.insertOne({
+      name: 'any_name',
+      email: 'any_email@mail.com',
+      password: 'hashed_password',
+    });
+    await sut.updateAccessToken(insertedId.toHexString(), 'any_token');
+    const account = await accountCollection.findOne({ _id: insertedId });
+    expect(account).toBeTruthy();
+    expect(account?.accessToken).toBe('any_token');
   });
 });
