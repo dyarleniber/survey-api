@@ -3,14 +3,10 @@ import {
 } from './db-add-account-protocols';
 
 export class DbAddAccount implements AddAccount {
-  private readonly hashGenerator: HashGenerator;
-
-  private readonly addAccountRepository: AddAccountRepository;
-
-  constructor(hashGenerator: HashGenerator, addAccountRepository: AddAccountRepository) {
-    this.hashGenerator = hashGenerator;
-    this.addAccountRepository = addAccountRepository;
-  }
+  constructor(
+    private readonly hashGenerator: HashGenerator,
+    private readonly addAccountRepository: AddAccountRepository,
+  ) {}
 
   async add(account: AddAccountModel): Promise<AccountModel> {
     const hashedPassword = await this.hashGenerator.hash(account.password);
