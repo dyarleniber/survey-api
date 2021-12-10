@@ -5,7 +5,7 @@ import {
   AddAccountModel,
   Validation,
   HttpRequest,
-} from '../../../../src/presentation/controllers/signup/signup-protocols';
+} from '../../../../src/presentation/controllers/signup/signup-controller-protocols';
 import { MissingParamError, ServerError } from '../../../../src/presentation/errors';
 import { badRequest, serverError, ok } from '../../../../src/presentation/helpers/http/http-helpers';
 

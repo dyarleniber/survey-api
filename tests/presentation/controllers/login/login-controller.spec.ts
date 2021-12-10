@@ -4,7 +4,7 @@ import {
   AuthenticationModel,
   Validation,
   HttpRequest,
-} from '../../../../src/presentation/controllers/login/login-protocols';
+} from '../../../../src/presentation/controllers/login/login-controller-protocols';
 import { MissingParamError, ServerError } from '../../../../src/presentation/errors';
 import {
   badRequest, serverError, unauthorized, ok,

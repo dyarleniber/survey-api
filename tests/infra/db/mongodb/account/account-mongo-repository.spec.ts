@@ -1,5 +1,5 @@
 import { Collection } from 'mongodb';
-import { AccountMongoRepository } from '../../../../../src/infra/db/mongodb/account-repository/account';
+import { AccountMongoRepository } from '../../../../../src/infra/db/mongodb/account/account-mongo-repository';
 import { MongoHelper } from '../../../../../src/infra/db/mongodb/helpers/mongo-helper';
 
 const makeSut = (): AccountMongoRepository => new AccountMongoRepository();
