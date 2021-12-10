@@ -1,12 +1,12 @@
 import { LogControllerDecorator } from '../../../src/main/decorators/log-controller-decorator';
 import { Controller, HttpRequest, HttpResponse } from '../../../src/presentation/protocols';
-import { LogErrorRepository } from '../../../src/data/protocols/log-error-repository';
-import { serverError, ok } from '../../../src/presentation/helpers';
+import { LogErrorRepository } from '../../../src/data/protocols/db/log/log-error-repository';
+import { serverError, ok } from '../../../src/presentation/helpers/http/http-helpers';
 
 const makeController = (): Controller => {
   class ControllerStub implements Controller {
     async handle(_data: HttpRequest): Promise<HttpResponse> {
-      return Promise.resolve(ok('any_body'));
+      return ok('any_body');
     }
   }
   return new ControllerStub();

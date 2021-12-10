@@ -1,14 +1,15 @@
 import bcrypt from 'bcrypt';
-import { Encryptor } from '../../data/protocols/encryptor';
+import { HashGenerator } from '../../data/protocols/cryptography/hash-generator';
+import { HashComparer } from '../../data/protocols/cryptography/hash-comparer';
 
-export class BcryptAdapter implements Encryptor {
-  private readonly salt: number;
+export class BcryptAdapter implements HashGenerator, HashComparer {
+  constructor(private readonly salt: number) {}
 
-  constructor(salt: number) {
-    this.salt = salt;
+  async hash(value: string): Promise<string> {
+    return bcrypt.hash(value, this.salt);
   }
 
-  async encrypt(value: string): Promise<string> {
-    return bcrypt.hash(value, this.salt);
+  async compare(plaintext: string, hash: string): Promise<boolean> {
+    return bcrypt.compare(plaintext, hash);
   }
 }
