@@ -13,9 +13,9 @@ services:
     image: node:14
     working_dir: /usr/src/app
     restart: always
-    command: bash -c "npm install --only=production && npm run debug"
+    command: bash -c "npm install && npm run debug"
     volumes:
-      - ./dist:/usr/src/app/dist
+      - ./dist/:/usr/src/app/dist/
       - ./package.json:/usr/src/app/package.json
     ports:
       - "5050:5050"
