@@ -10,10 +10,10 @@ services:
       - "27017:27017"
   api:
     container_name: api-container
-    build: .
-    image: survey-api
+    image: node:14
+    working_dir: /usr/src/app
     restart: always
-    command: npm run debug
+    command: bash -c "npm install --only=production && npm run debug"
     volumes:
       - ./dist:/usr/src/app/dist
       - ./package.json:/usr/src/app/package.json
