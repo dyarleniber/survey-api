@@ -5,7 +5,7 @@
   "main": "dist/main/server.js",
   "scripts": {
     "start": "node dist/main/server.js",
-    "build": "rimraf dist && tsc",
+    "build": "rimraf dist && tsc -p tsconfig-build.json",
     "dev": "sucrase-node src/main/server.ts",
     "test": "jest --passWithNoTests --runInBand",
     "test:unit": "npm run test -- -c jest-unit.config.js",
