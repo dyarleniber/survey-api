@@ -1,0 +1,50 @@
+import { DbAddSurvey } from '../../../../src/data/use-cases/add-survey/db-add-survey';
+import { AddSurveyModel, AddSurveyRepository } from '../../../../src/data/use-cases/add-survey/db-add-survey-protocols';
+
+const makeAddSurveyRepository = (): AddSurveyRepository => {
+  class AddSurveyRepositoryStub implements AddSurveyRepository {
+    async add(_survey: AddSurveyModel): Promise<void> {
+      return Promise.resolve();
+    }
+  }
+  return new AddSurveyRepositoryStub();
+};
+
+const makeFakeSurveyData = (): AddSurveyModel => ({
+  question: 'any_question',
+  answers: [{
+    image: 'any_image',
+    answer: 'any_answer',
+  }],
+});
+
+interface SutTypes {
+  sut: DbAddSurvey;
+  addSurveyRepositoryStub: AddSurveyRepository;
+}
+
+const makeSut = (): SutTypes => {
+  const addSurveyRepositoryStub = makeAddSurveyRepository();
+  const sut = new DbAddSurvey(addSurveyRepositoryStub);
+  return {
+    sut,
+    addSurveyRepositoryStub,
+  };
+};
+
+describe('DbAddSurvey Use Case', () => {
+  test('Should call AddSurveyRepository with correct values', async () => {
+    const { sut, addSurveyRepositoryStub } = makeSut();
+    const addSpy = jest.spyOn(addSurveyRepositoryStub, 'add');
+    const surveyData = makeFakeSurveyData();
+    await sut.add(surveyData);
+    expect(addSpy).toHaveBeenCalledWith(surveyData);
+  });
+
+  test('Should throw an error if the AddSurveyRepository throws an error', async () => {
+    const { sut, addSurveyRepositoryStub } = makeSut();
+    jest.spyOn(addSurveyRepositoryStub, 'add').mockImplementation(async () => { throw new Error(); });
+    const promise = sut.add(makeFakeSurveyData());
+    await expect(promise).rejects.toThrow();
+  });
+});
