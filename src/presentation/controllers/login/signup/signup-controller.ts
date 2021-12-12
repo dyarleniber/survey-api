@@ -3,8 +3,8 @@ import {
 } from './signup-controller-protocols';
 import {
   badRequest, serverError, forbidden, ok,
-} from '../../helpers/http/http-helpers';
-import { EmailInUseError } from '../../errors';
+} from '../../../helpers/http/http-helpers';
+import { EmailInUseError } from '../../../errors';
 
 export class SignUpController implements Controller {
   constructor(

@@ -1,4 +1,4 @@
-import { SignUpController } from '../../../../src/presentation/controllers/signup/signup-controller';
+import { SignUpController } from '../../../../../src/presentation/controllers/login/signup/signup-controller';
 import {
   AccountModel,
   AddAccount,
@@ -7,11 +7,11 @@ import {
   HttpRequest,
   Authentication,
   AuthenticationModel,
-} from '../../../../src/presentation/controllers/signup/signup-controller-protocols';
-import { MissingParamError, EmailInUseError, ServerError } from '../../../../src/presentation/errors';
+} from '../../../../../src/presentation/controllers/login/signup/signup-controller-protocols';
+import { MissingParamError, EmailInUseError, ServerError } from '../../../../../src/presentation/errors';
 import {
   badRequest, serverError, forbidden, ok,
-} from '../../../../src/presentation/helpers/http/http-helpers';
+} from '../../../../../src/presentation/helpers/http/http-helpers';
 
 const makeFakeAccount = (): AccountModel => ({
   id: 'valid_id',
