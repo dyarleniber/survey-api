@@ -38,7 +38,10 @@ export class AccountMongoRepository implements
     const accountCollection = await this.getCollection();
     const account = await accountCollection.findOne<AccountModel>({
       accessToken: token,
-      role,
+      $or: [
+        { role },
+        { role: 'admin' },
+      ],
     });
     return account && <AccountModel>MongoHelper.map(account);
   }
