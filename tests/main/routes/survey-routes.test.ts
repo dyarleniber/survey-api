@@ -72,5 +72,21 @@ describe('Survey routes', () => {
         })
         .expect(204);
     });
+
+    test('should return 403 on add survey with invalid accessToken', async () => {
+      await request(app)
+        .post('/api/surveys')
+        .set('x-access-token', 'invalid_token')
+        .send({
+          question: 'Question',
+          answers: [{
+            answer: 'Answer 1',
+            image: 'image_url',
+          }, {
+            answer: 'Answer 2',
+          }],
+        })
+        .expect(403);
+    });
   });
 });
