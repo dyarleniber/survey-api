@@ -1,7 +1,7 @@
 import {
-  Controller, HttpRequest, HttpResponse, Validation, AddSurvey,
+  AddSurvey, Controller, HttpRequest, HttpResponse, Validation,
 } from './add-survey-controller-protocols';
-import { badRequest, serverError, noContent } from '../../../helpers/http/http-helpers';
+import { badRequest, noContent, serverError } from '@/presentation/helpers/http/http-helpers';
 
 export class AddSurveyController implements Controller {
   constructor(

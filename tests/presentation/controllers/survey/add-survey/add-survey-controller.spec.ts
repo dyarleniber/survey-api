@@ -1,10 +1,13 @@
 import MockDate from 'mockdate';
-import { AddSurveyController } from '../../../../../src/presentation/controllers/survey/add-survey/add-survey-controller';
+import { AddSurveyController } from '@/presentation/controllers/survey/add-survey/add-survey-controller';
 import {
-  HttpRequest, Validation, AddSurvey, AddSurveyModel,
-} from '../../../../../src/presentation/controllers/survey/add-survey/add-survey-controller-protocols';
-import { MissingParamError, ServerError } from '../../../../../src/presentation/errors';
-import { badRequest, serverError, noContent } from '../../../../../src/presentation/helpers/http/http-helpers';
+  AddSurvey,
+  AddSurveyModel,
+  HttpRequest,
+  Validation,
+} from '@/presentation/controllers/survey/add-survey/add-survey-controller-protocols';
+import { MissingParamError, ServerError } from '@/presentation/errors';
+import { badRequest, noContent, serverError } from '@/presentation/helpers/http/http-helpers';
 
 const makeValidation = (): Validation => {
   class ValidationStub implements Validation {
@@ -12,6 +15,7 @@ const makeValidation = (): Validation => {
       return null;
     }
   }
+
   return new ValidationStub();
 };
 
@@ -21,6 +25,7 @@ const makeAddSurvey = (): AddSurvey => {
       return Promise.resolve();
     }
   }
+
   return new AddSurveyStub();
 };
 
@@ -97,7 +102,9 @@ describe('AddSurvey Controller', () => {
 
   test('Should return 500 if AddSurvey throws an error', async () => {
     const { sut, addSurveyStub } = makeSut();
-    jest.spyOn(addSurveyStub, 'add').mockImplementation(async () => { throw new Error(); });
+    jest.spyOn(addSurveyStub, 'add').mockImplementation(async () => {
+      throw new Error();
+    });
     const httpResponse = await sut.handle(makeFakeRequest());
     expect(httpResponse).toEqual(serverError(new ServerError()));
   });

@@ -1,7 +1,11 @@
-import { DbAddAccount } from '../../../../src/data/use-cases/add-account/db-add-account';
+import { DbAddAccount } from '@/data/use-cases/add-account/db-add-account';
 import {
-  HashGenerator, AccountModel, AddAccountModel, AddAccountRepository, LoadAccountByEmailRepository,
-} from '../../../../src/data/use-cases/add-account/db-add-account-protocols';
+  AccountModel,
+  AddAccountModel,
+  AddAccountRepository,
+  HashGenerator,
+  LoadAccountByEmailRepository,
+} from '@/data/use-cases/add-account/db-add-account-protocols';
 
 const makeHashGenerator = (): HashGenerator => {
   class HashGeneratorStub implements HashGenerator {
@@ -9,6 +13,7 @@ const makeHashGenerator = (): HashGenerator => {
       return 'hashed_password';
     }
   }
+
   return new HashGeneratorStub();
 };
 
@@ -25,6 +30,7 @@ const makeAddAccountRepository = (): AddAccountRepository => {
       return makeFakeAccount();
     }
   }
+
   return new AddAccountRepositoryStub();
 };
 
@@ -34,6 +40,7 @@ const makeLoadAccountByEmailRepository = (): LoadAccountByEmailRepository => {
       return null;
     }
   }
+
   return new LoadAccountByEmailRepositoryStub();
 };
 
@@ -77,7 +84,9 @@ describe('DbAddAccount Use case', () => {
 
   test('Should throw an error if the HashGenerator throws an error', async () => {
     const { sut, hashGeneratorStub } = makeSut();
-    jest.spyOn(hashGeneratorStub, 'hash').mockImplementation(async () => { throw new Error(); });
+    jest.spyOn(hashGeneratorStub, 'hash').mockImplementation(async () => {
+      throw new Error();
+    });
     const promise = sut.add(makeFakeAccountData());
     await expect(promise).rejects.toThrow();
   });
@@ -95,7 +104,9 @@ describe('DbAddAccount Use case', () => {
 
   test('Should throw an error if the AddAccountRepository throws an error', async () => {
     const { sut, addAccountRepositoryStub } = makeSut();
-    jest.spyOn(addAccountRepositoryStub, 'add').mockImplementation(async () => { throw new Error(); });
+    jest.spyOn(addAccountRepositoryStub, 'add').mockImplementation(async () => {
+      throw new Error();
+    });
     const promise = sut.add(makeFakeAccountData());
     await expect(promise).rejects.toThrow();
   });
@@ -115,7 +126,9 @@ describe('DbAddAccount Use case', () => {
 
   test('Should throw an error if LoadAccountByEmailRepository throws an error', async () => {
     const { sut, loadAccountByEmailRepositoryStub } = makeSut();
-    jest.spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail').mockImplementation(async () => { throw new Error(); });
+    jest.spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail').mockImplementation(async () => {
+      throw new Error();
+    });
     const promise = sut.add(makeFakeAccountData());
     await expect(promise).rejects.toThrow();
   });

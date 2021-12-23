@@ -1,8 +1,11 @@
 import MockDate from 'mockdate';
-import { LoadSurveysController } from '../../../../../src/presentation/controllers/survey/load-surveys/load-surveys-controller';
-import { LoadSurveys, SurveyModel } from '../../../../../src/presentation/controllers/survey/load-surveys/load-surveys-controller-protocols';
-import { ServerError } from '../../../../../src/presentation/errors';
-import { serverError, ok, noContent } from '../../../../../src/presentation/helpers/http/http-helpers';
+import { LoadSurveysController } from '@/presentation/controllers/survey/load-surveys/load-surveys-controller';
+import {
+  LoadSurveys,
+  SurveyModel,
+} from '@/presentation/controllers/survey/load-surveys/load-surveys-controller-protocols';
+import { ServerError } from '@/presentation/errors';
+import { noContent, ok, serverError } from '@/presentation/helpers/http/http-helpers';
 
 const makeFakeSurveys = (): SurveyModel[] => [
   {
@@ -25,6 +28,7 @@ const makeLoadSurveys = (): LoadSurveys => {
       return Promise.resolve(makeFakeSurveys());
     }
   }
+
   return new LoadSurveysStub();
 };
 
@@ -60,7 +64,9 @@ describe('LoadSurveys Controller', () => {
 
   test('Should return 500 if LoadSurveys throws an error', async () => {
     const { sut, loadSurveysStub } = makeSut();
-    jest.spyOn(loadSurveysStub, 'load').mockImplementation(async () => { throw new Error(); });
+    jest.spyOn(loadSurveysStub, 'load').mockImplementation(async () => {
+      throw new Error();
+    });
     const httpResponse = await sut.handle({});
     expect(httpResponse).toEqual(serverError(new ServerError()));
   });

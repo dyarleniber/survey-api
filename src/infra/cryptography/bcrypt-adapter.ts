@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
-import { HashGenerator } from '../../data/protocols/cryptography/hash-generator';
-import { HashComparer } from '../../data/protocols/cryptography/hash-comparer';
+import { HashGenerator } from '@/data/protocols/cryptography/hash-generator';
+import { HashComparer } from '@/data/protocols/cryptography/hash-comparer';
 
 export class BcryptAdapter implements HashGenerator, HashComparer {
   constructor(private readonly salt: number) {}

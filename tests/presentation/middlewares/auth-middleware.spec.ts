@@ -1,7 +1,11 @@
-import { AuthMiddleware } from '../../../src/presentation/middlewares/auth-middleware';
-import { LoadAccountByToken, AccountModel, HttpRequest } from '../../../src/presentation/middlewares/auth-middleware-protocols';
-import { forbidden, serverError, ok } from '../../../src/presentation/helpers/http/http-helpers';
-import { AccessDeniedError } from '../../../src/presentation/errors';
+import { AuthMiddleware } from '@/presentation/middlewares/auth-middleware';
+import {
+  AccountModel,
+  HttpRequest,
+  LoadAccountByToken,
+} from '@/presentation/middlewares/auth-middleware-protocols';
+import { forbidden, ok, serverError } from '@/presentation/helpers/http/http-helpers';
+import { AccessDeniedError } from '@/presentation/errors';
 
 const makeFakeAccount = (): AccountModel => ({
   id: 'any_id',
@@ -22,6 +26,7 @@ const makeLoadAccountByToken = () => {
       return makeFakeAccount();
     }
   }
+
   return new LoadAccountByTokenStub();
 };
 
@@ -62,7 +67,9 @@ describe('Auth Middleware', () => {
 
   test('Should return 500 if LoadAccountByToken throws an error', async () => {
     const { sut, loadAccountByTokenStub } = makeSut();
-    jest.spyOn(loadAccountByTokenStub, 'load').mockImplementation(async () => { throw new Error(); });
+    jest.spyOn(loadAccountByTokenStub, 'load').mockImplementation(async () => {
+      throw new Error();
+    });
     const httpResponse = await sut.handle(makeFakeRequest());
     expect(httpResponse).toEqual(serverError(new Error()));
   });

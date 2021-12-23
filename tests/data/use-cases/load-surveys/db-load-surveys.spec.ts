@@ -1,9 +1,9 @@
 import MockDate from 'mockdate';
-import { DbLoadSurveys } from '../../../../src/data/use-cases/load-surveys/db-load-surveys';
+import { DbLoadSurveys } from '@/data/use-cases/load-surveys/db-load-surveys';
 import {
-  SurveyModel,
   LoadSurveysRepository,
-} from '../../../../src/data/use-cases/load-surveys/db-load-surveys-protocols';
+  SurveyModel,
+} from '@/data/use-cases/load-surveys/db-load-surveys-protocols';
 
 const makeFakeSurveys = (): SurveyModel[] => [
   {
@@ -26,6 +26,7 @@ const makeLoadSurveysRepository = (): LoadSurveysRepository => {
       return makeFakeSurveys();
     }
   }
+
   return new LoadSurveysRepositoryStub();
 };
 
@@ -61,7 +62,9 @@ describe('DbLoadSurveys Use case', () => {
 
   test('Should throw an error if LoadSurveysRepository throws an error', async () => {
     const { sut, loadSurveysRepositoryStub } = makeSut();
-    jest.spyOn(loadSurveysRepositoryStub, 'loadAll').mockImplementation(async () => { throw new Error(); });
+    jest.spyOn(loadSurveysRepositoryStub, 'loadAll').mockImplementation(async () => {
+      throw new Error();
+    });
     const promise = sut.load();
     await expect(promise).rejects.toThrow();
   });

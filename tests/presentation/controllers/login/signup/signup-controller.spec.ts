@@ -1,17 +1,17 @@
-import { SignUpController } from '../../../../../src/presentation/controllers/login/signup/signup-controller';
+import { SignUpController } from '@/presentation/controllers/login/signup/signup-controller';
 import {
   AccountModel,
   AddAccount,
   AddAccountModel,
-  Validation,
-  HttpRequest,
   Authentication,
   AuthenticationModel,
-} from '../../../../../src/presentation/controllers/login/signup/signup-controller-protocols';
-import { MissingParamError, EmailInUseError, ServerError } from '../../../../../src/presentation/errors';
+  HttpRequest,
+  Validation,
+} from '@/presentation/controllers/login/signup/signup-controller-protocols';
+import { EmailInUseError, MissingParamError, ServerError } from '@/presentation/errors';
 import {
-  badRequest, serverError, forbidden, ok,
-} from '../../../../../src/presentation/helpers/http/http-helpers';
+  badRequest, forbidden, ok, serverError,
+} from '@/presentation/helpers/http/http-helpers';
 
 const makeFakeAccount = (): AccountModel => ({
   id: 'valid_id',
@@ -26,6 +26,7 @@ const makeAddAccount = (): AddAccount => {
       return makeFakeAccount();
     }
   }
+
   return new AddAccountStub();
 };
 
@@ -35,6 +36,7 @@ const makeAuthentication = (): Authentication => {
       return 'any_token';
     }
   }
+
   return new AuthenticationStub();
 };
 
@@ -44,6 +46,7 @@ const makeValidation = (): Validation => {
       return null;
     }
   }
+
   return new ValidationStub();
 };
 
@@ -90,7 +93,9 @@ describe('SignUp Controller', () => {
 
   test('Should return 500 if AddAccount throws an error', async () => {
     const { sut, addAccountStub } = makeSut();
-    jest.spyOn(addAccountStub, 'add').mockImplementation(async () => { throw new Error(); });
+    jest.spyOn(addAccountStub, 'add').mockImplementation(async () => {
+      throw new Error();
+    });
     const httpResponse = await sut.handle(makeFakeRequest());
     expect(httpResponse).toEqual(serverError(new ServerError()));
   });
@@ -131,7 +136,9 @@ describe('SignUp Controller', () => {
 
   test('Should return 500 if Authentication throws an error', async () => {
     const { sut, authenticationStub } = makeSut();
-    jest.spyOn(authenticationStub, 'auth').mockImplementation(async () => { throw new Error(); });
+    jest.spyOn(authenticationStub, 'auth').mockImplementation(async () => {
+      throw new Error();
+    });
     const httpResponse = await sut.handle(makeFakeRequest());
     expect(httpResponse).toEqual(serverError(new ServerError()));
   });

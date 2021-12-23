@@ -1,7 +1,7 @@
-import { LogControllerDecorator } from '../../../src/main/decorators/log-controller-decorator';
-import { Controller, HttpRequest, HttpResponse } from '../../../src/presentation/protocols';
-import { LogErrorRepository } from '../../../src/data/protocols/db/log/log-error-repository';
-import { serverError, ok } from '../../../src/presentation/helpers/http/http-helpers';
+import { LogControllerDecorator } from '@/main/decorators/log-controller-decorator';
+import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols';
+import { LogErrorRepository } from '@/data/protocols/db/log/log-error-repository';
+import { ok, serverError } from '@/presentation/helpers/http/http-helpers';
 
 const makeController = (): Controller => {
   class ControllerStub implements Controller {
@@ -9,6 +9,7 @@ const makeController = (): Controller => {
       return ok('any_body');
     }
   }
+
   return new ControllerStub();
 };
 
@@ -18,6 +19,7 @@ const makeLogErrorRepository = (): LogErrorRepository => {
       return Promise.resolve();
     }
   }
+
   return new LogErrorRepositoryStub();
 };
 

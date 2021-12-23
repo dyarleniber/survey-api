@@ -1,8 +1,11 @@
-import { makeSignUpValidation } from '../../../../../../src/main/factories/controllers/login/signup/signup-validation-factory';
+import { makeSignUpValidation } from '@/main/factories/controllers/login/signup/signup-validation-factory';
 import {
-  ValidationComposite, RequiredFieldValidation, CompareFieldsValidation, EmailValidation,
-} from '../../../../../../src/validation/validators';
-import { EmailValidator } from '../../../../../../src/validation/protocols';
+  CompareFieldsValidation,
+  EmailValidation,
+  RequiredFieldValidation,
+  ValidationComposite,
+} from '@/validation/validators';
+import { EmailValidator } from '@/validation/protocols';
 
 jest.mock('../../../../../../src/validation/validators/validation-composite');
 
@@ -12,6 +15,7 @@ const makeEmailValidator = (): EmailValidator => {
       return true;
     }
   }
+
   return new EmailValidatorStub();
 };
 

@@ -1,9 +1,9 @@
 import {
+  AccountModel,
   AddAccount,
   AddAccountModel,
-  AccountModel,
-  HashGenerator,
   AddAccountRepository,
+  HashGenerator,
   LoadAccountByEmailRepository,
 } from './db-add-account-protocols';
 

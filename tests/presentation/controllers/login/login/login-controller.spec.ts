@@ -1,14 +1,14 @@
-import { LoginController } from '../../../../../src/presentation/controllers/login/login/login-controller';
+import { LoginController } from '@/presentation/controllers/login/login/login-controller';
 import {
   Authentication,
   AuthenticationModel,
-  Validation,
   HttpRequest,
-} from '../../../../../src/presentation/controllers/login/login/login-controller-protocols';
-import { MissingParamError, ServerError } from '../../../../../src/presentation/errors';
+  Validation,
+} from '@/presentation/controllers/login/login/login-controller-protocols';
+import { MissingParamError, ServerError } from '@/presentation/errors';
 import {
-  badRequest, serverError, unauthorized, ok,
-} from '../../../../../src/presentation/helpers/http/http-helpers';
+  badRequest, ok, serverError, unauthorized,
+} from '@/presentation/helpers/http/http-helpers';
 
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
@@ -16,6 +16,7 @@ const makeAuthentication = (): Authentication => {
       return 'any_token';
     }
   }
+
   return new AuthenticationStub();
 };
 
@@ -25,6 +26,7 @@ const makeValidation = (): Validation => {
       return null;
     }
   }
+
   return new ValidationStub();
 };
 
@@ -65,7 +67,9 @@ describe('Login Controller', () => {
 
   test('Should return 500 if Authentication throws an error', async () => {
     const { sut, authenticationStub } = makeSut();
-    jest.spyOn(authenticationStub, 'auth').mockImplementation(async () => { throw new Error(); });
+    jest.spyOn(authenticationStub, 'auth').mockImplementation(async () => {
+      throw new Error();
+    });
     const httpResponse = await sut.handle(makeFakeRequest());
     expect(httpResponse).toEqual(serverError(new ServerError()));
   });

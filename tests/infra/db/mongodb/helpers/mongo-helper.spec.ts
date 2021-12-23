@@ -1,4 +1,4 @@
-import { MongoHelper } from '../../../../../src/infra/db/mongodb/helpers/mongo-helper';
+import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper';
 
 const makeSut = () => MongoHelper;
 

@@ -1,6 +1,6 @@
 import MockDate from 'mockdate';
-import { DbAddSurvey } from '../../../../src/data/use-cases/add-survey/db-add-survey';
-import { AddSurveyModel, AddSurveyRepository } from '../../../../src/data/use-cases/add-survey/db-add-survey-protocols';
+import { DbAddSurvey } from '@/data/use-cases/add-survey/db-add-survey';
+import { AddSurveyModel, AddSurveyRepository } from '@/data/use-cases/add-survey/db-add-survey-protocols';
 
 const makeAddSurveyRepository = (): AddSurveyRepository => {
   class AddSurveyRepositoryStub implements AddSurveyRepository {
@@ -8,6 +8,7 @@ const makeAddSurveyRepository = (): AddSurveyRepository => {
       return Promise.resolve();
     }
   }
+
   return new AddSurveyRepositoryStub();
 };
 
@@ -53,7 +54,9 @@ describe('DbAddSurvey Use Case', () => {
 
   test('Should throw an error if the AddSurveyRepository throws an error', async () => {
     const { sut, addSurveyRepositoryStub } = makeSut();
-    jest.spyOn(addSurveyRepositoryStub, 'add').mockImplementation(async () => { throw new Error(); });
+    jest.spyOn(addSurveyRepositoryStub, 'add').mockImplementation(async () => {
+      throw new Error();
+    });
     const promise = sut.add(makeFakeSurveyData());
     await expect(promise).rejects.toThrow();
   });

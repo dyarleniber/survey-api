@@ -1,6 +1,6 @@
-import { EmailValidation } from '../../../src/validation/validators';
-import { EmailValidator } from '../../../src/validation/protocols';
-import { InvalidParamError } from '../../../src/presentation/errors';
+import { EmailValidation } from '@/validation/validators';
+import { EmailValidator } from '@/validation/protocols';
+import { InvalidParamError } from '@/presentation/errors';
 
 const makeEmailValidator = (): EmailValidator => {
   class EmailValidatorStub implements EmailValidator {
@@ -8,6 +8,7 @@ const makeEmailValidator = (): EmailValidator => {
       return true;
     }
   }
+
   return new EmailValidatorStub();
 };
 
