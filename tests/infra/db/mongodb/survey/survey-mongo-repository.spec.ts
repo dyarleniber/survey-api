@@ -2,9 +2,9 @@ import { Collection } from 'mongodb';
 import { SurveyMongoRepository } from '../../../../../src/infra/db/mongodb/survey/survey-mongo-repository';
 import { MongoHelper } from '../../../../../src/infra/db/mongodb/helpers/mongo-helper';
 
-const makeSut = (): SurveyMongoRepository => new SurveyMongoRepository();
-
 let surveyCollection: Collection;
+
+const makeSut = (): SurveyMongoRepository => new SurveyMongoRepository();
 
 describe('Survey Mongo Repository', () => {
   beforeAll(async (): Promise<void> => {

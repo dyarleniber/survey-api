@@ -5,8 +5,29 @@ import app from '../../../src/main/config/app';
 import { MongoHelper } from '../../../src/infra/db/mongodb/helpers/mongo-helper';
 import env from '../../../src/main/config/env';
 
-let surveyCollection: Collection;
 let accountCollection: Collection;
+let surveyCollection: Collection;
+
+const makeAccessToken = async (role?: string): Promise<string> => {
+  const { insertedId } = await accountCollection.insertOne({
+    name: 'any_name',
+    email: 'any_email@mail.com',
+    password: 'hashedPassword',
+    role,
+  });
+  const accessToken = sign({ id: insertedId.toHexString() }, env.jwtSecret);
+  await accountCollection.updateOne(
+    {
+      _id: insertedId,
+    },
+    {
+      $set: {
+        accessToken,
+      },
+    },
+  );
+  return accessToken;
+};
 
 describe('Survey routes', () => {
   beforeAll(async (): Promise<void> => {
@@ -41,23 +62,7 @@ describe('Survey routes', () => {
     });
 
     test('should return 204 on add survey with valid accessToken', async () => {
-      const { insertedId } = await accountCollection.insertOne({
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        password: 'hashedPassword',
-        role: 'admin',
-      });
-      const accessToken = sign({ id: insertedId.toHexString() }, env.jwtSecret);
-      await accountCollection.updateOne(
-        {
-          _id: insertedId,
-        },
-        {
-          $set: {
-            accessToken,
-          },
-        },
-      );
+      const accessToken = await makeAccessToken('admin');
       await request(app)
         .post('/api/surveys')
         .set('x-access-token', accessToken)
@@ -87,6 +92,48 @@ describe('Survey routes', () => {
           }],
         })
         .expect(403);
+    });
+  });
+
+  describe('GET /surveys', () => {
+    test('should return 403 on load surveys without accessToken', async () => {
+      await request(app)
+        .get('/api/surveys')
+        .expect(403);
+    });
+
+    test('should return 403 on load surveys with invalid accessToken', async () => {
+      await request(app)
+        .get('/api/surveys')
+        .set('x-access-token', 'invalid_token')
+        .expect(403);
+    });
+
+    test('should return 200 on load surveys with valid accessToken', async () => {
+      const accessToken = await makeAccessToken();
+      await surveyCollection.insertMany([{
+        question: 'Question',
+        answers: [{
+          answer: 'Answer 1',
+          image: 'image_url',
+        }, {
+          answer: 'Answer 2',
+        }],
+        date: new Date(),
+      }, {
+        question: 'Question 2',
+        answers: [{
+          answer: 'Answer 1',
+          image: 'image_url',
+        }, {
+          answer: 'Answer 2',
+        }],
+        date: new Date(),
+      }]);
+      await request(app)
+        .get('/api/surveys')
+        .set('x-access-token', accessToken)
+        .expect(200);
     });
   });
 });
