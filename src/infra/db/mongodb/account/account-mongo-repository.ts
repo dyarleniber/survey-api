@@ -17,7 +17,7 @@ export class AccountMongoRepository implements AddAccountRepository,
 
   private async getById(_id: ObjectId): Promise<AccountModel> {
     const accountCollection = await this.getCollection();
-    const account = await accountCollection.findOne<AccountModel>({ _id });
+    const account = await accountCollection.findOne({ _id });
     return <AccountModel>MongoHelper.map(account);
   }
 
@@ -29,13 +29,13 @@ export class AccountMongoRepository implements AddAccountRepository,
 
   async loadByEmail(email: string): Promise<AccountModel | null> {
     const accountCollection = await this.getCollection();
-    const account = await accountCollection.findOne<AccountModel>({ email });
+    const account = await accountCollection.findOne({ email });
     return account && <AccountModel>MongoHelper.map(account);
   }
 
   async loadByToken(token: string, role?: string): Promise<AccountModel | null> {
     const accountCollection = await this.getCollection();
-    const account = await accountCollection.findOne<AccountModel>({
+    const account = await accountCollection.findOne({
       accessToken: token,
       $or: [
         { role },
