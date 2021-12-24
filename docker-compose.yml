@@ -14,6 +14,8 @@ services:
     working_dir: /usr/src/app
     restart: always
     command: bash -c "npm install && npm run debug"
+    environment:
+      - MONGO_URL=mongodb://mongo:27017/survey-api
     volumes:
       - ./dist/:/usr/src/app/dist/
       - ./package.json:/usr/src/app/package.json
