@@ -11,7 +11,7 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository {
 
   async save(surveyData: SaveSurveyResultModel): Promise<SurveyResultModel> {
     const surveyResultCollection = await this.getCollection();
-    const surveyResult = await surveyResultCollection.findOneAndUpdate(
+    const { value: surveyResult } = await surveyResultCollection.findOneAndUpdate(
       {
         surveyId: new ObjectId(surveyData.surveyId),
         accountId: new ObjectId(surveyData.accountId),
