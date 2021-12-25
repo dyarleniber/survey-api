@@ -100,7 +100,8 @@ describe('Survey Mongo Repository', () => {
       });
       const survey = await sut.loadById(insertedId.toHexString());
       expect(survey).toBeTruthy();
-      expect(survey.question).toBe('any_question');
+      expect(survey?.id).toBeTruthy();
+      expect(survey?.question).toBe('any_question');
     });
   });
 });
