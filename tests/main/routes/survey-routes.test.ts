@@ -46,7 +46,7 @@ describe('Survey routes', () => {
   });
 
   describe('POST /surveys', () => {
-    test('should return 403 on add survey without accessToken', async () => {
+    test('Should return 403 on add survey without accessToken', async () => {
       await request(app)
         .post('/api/surveys')
         .send({
@@ -61,7 +61,7 @@ describe('Survey routes', () => {
         .expect(403);
     });
 
-    test('should return 204 on add survey with valid accessToken', async () => {
+    test('Should return 204 on add survey with valid accessToken', async () => {
       const accessToken = await makeAccessToken('admin');
       await request(app)
         .post('/api/surveys')
@@ -78,7 +78,7 @@ describe('Survey routes', () => {
         .expect(204);
     });
 
-    test('should return 403 on add survey with invalid accessToken', async () => {
+    test('Should return 403 on add survey with invalid accessToken', async () => {
       await request(app)
         .post('/api/surveys')
         .set('x-access-token', 'invalid_token')
@@ -96,20 +96,20 @@ describe('Survey routes', () => {
   });
 
   describe('GET /surveys', () => {
-    test('should return 403 on load surveys without accessToken', async () => {
+    test('Should return 403 on load surveys without accessToken', async () => {
       await request(app)
         .get('/api/surveys')
         .expect(403);
     });
 
-    test('should return 403 on load surveys with invalid accessToken', async () => {
+    test('Should return 403 on load surveys with invalid accessToken', async () => {
       await request(app)
         .get('/api/surveys')
         .set('x-access-token', 'invalid_token')
         .expect(403);
     });
 
-    test('should return 200 on load surveys with valid accessToken', async () => {
+    test('Should return 200 on load surveys with valid accessToken', async () => {
       const accessToken = await makeAccessToken();
       await surveyCollection.insertMany([{
         question: 'Question',

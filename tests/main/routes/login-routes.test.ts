@@ -22,7 +22,7 @@ describe('Login routes', () => {
   });
 
   describe('POST /signup', () => {
-    test('should return 200 on signup success', async () => {
+    test('Should return 200 on signup success', async () => {
       await request(app)
         .post('/api/signup')
         .send({
@@ -36,7 +36,7 @@ describe('Login routes', () => {
   });
 
   describe('POST /login', () => {
-    test('should return 200 on login success', async () => {
+    test('Should return 200 on login success', async () => {
       const hashedPassword = await bcrypt.hash('any_password', env.bcryptSalt);
       await accountCollection.insertOne({
         name: 'any_name',
@@ -52,7 +52,7 @@ describe('Login routes', () => {
         .expect(200);
     });
 
-    test('should return 401 on login failure', async () => {
+    test('Should return 401 on login failure', async () => {
       await request(app)
         .post('/api/login')
         .send({
