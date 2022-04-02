@@ -2,9 +2,9 @@ import { SignUpController } from '@/presentation/controllers/login/signup/signup
 import {
   AccountModel,
   AddAccount,
-  AddAccountModel,
+  AddAccountParams,
   Authentication,
-  AuthenticationModel,
+  AuthenticationParams,
   HttpRequest,
   Validation,
 } from '@/presentation/controllers/login/signup/signup-controller-protocols';
@@ -22,7 +22,7 @@ const makeFakeAccount = (): AccountModel => ({
 
 const makeAddAccount = (): AddAccount => {
   class AddAccountStub implements AddAccount {
-    async add(_account: AddAccountModel): Promise<AccountModel> {
+    async add(_account: AddAccountParams): Promise<AccountModel> {
       return makeFakeAccount();
     }
   }
@@ -32,7 +32,7 @@ const makeAddAccount = (): AddAccount => {
 
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
-    async auth(_authentication: AuthenticationModel): Promise<string> {
+    async auth(_authentication: AuthenticationParams): Promise<string> {
       return 'any_token';
     }
   }
