@@ -6,7 +6,7 @@ import {
 } from '@/presentation/controllers/survey/load-surveys/load-surveys-controller-protocols';
 import { ServerError } from '@/presentation/errors';
 import { noContent, ok, serverError } from '@/presentation/helpers/http/http-helpers';
-import { mockSurveyModels } from '@/tests/domain/mocks/mock-survey';
+import { mockSurveyModels } from '@/tests/domain/mocks';
 import { throwError } from '@/tests/helpers/test-helper';
 
 const makeLoadSurveys = (): LoadSurveys => {

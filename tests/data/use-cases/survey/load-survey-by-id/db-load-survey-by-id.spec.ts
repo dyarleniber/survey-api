@@ -4,7 +4,7 @@ import {
   LoadSurveyByIdRepository,
   SurveyModel,
 } from '@/data/use-cases/survey/load-survey-by-id/db-load-survey-by-id-protocols';
-import { mockSurveyModel } from '@/tests/domain/mocks/mock-survey';
+import { mockSurveyModel } from '@/tests/domain/mocks';
 import { throwError } from '@/tests/helpers/test-helper';
 
 const makeLoadSurveyByIdRepository = (): LoadSurveyByIdRepository => {

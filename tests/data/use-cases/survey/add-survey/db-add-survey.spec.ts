@@ -1,7 +1,7 @@
 import MockDate from 'mockdate';
 import { DbAddSurvey } from '@/data/use-cases/survey/add-survey/db-add-survey';
 import { AddSurveyParams, AddSurveyRepository } from '@/data/use-cases/survey/add-survey/db-add-survey-protocols';
-import { mockAddSurveyParams } from '@/tests/domain/mocks/mock-survey';
+import { mockAddSurveyParams } from '@/tests/domain/mocks';
 import { throwError } from '@/tests/helpers/test-helper';
 
 const makeAddSurveyRepository = (): AddSurveyRepository => {

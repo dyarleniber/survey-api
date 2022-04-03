@@ -5,7 +5,7 @@ import {
   SaveSurveyResultParams,
   SaveSurveyResultRepository,
 } from '@/data/use-cases/survey-result/save-survey-result/db-save-survey-result-protocols';
-import { mockSurveyResultModel, mockSaveSurveyResultParams } from '@/tests/domain/mocks/mock-survey-result';
+import { mockSurveyResultModel, mockSaveSurveyResultParams } from '@/tests/domain/mocks';
 import { throwError } from '@/tests/helpers/test-helper';
 
 const makeSaveSurveyResultRepository = (): SaveSurveyResultRepository => {

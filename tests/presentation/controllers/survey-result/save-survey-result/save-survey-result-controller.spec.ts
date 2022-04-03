@@ -10,8 +10,7 @@ import {
 } from '@/presentation/controllers/survey-result/save-survey-result/save-survey-result-controller-protocols';
 import { InvalidParamError, ServerError } from '@/presentation/errors';
 import { forbidden, ok, serverError } from '@/presentation/helpers/http/http-helpers';
-import { mockSurveyModel } from '@/tests/domain/mocks/mock-survey';
-import { mockSurveyResultModel } from '@/tests/domain/mocks/mock-survey-result';
+import { mockSurveyModel, mockSurveyResultModel } from '@/tests/domain/mocks';
 import { throwError } from '@/tests/helpers/test-helper';
 
 const makeLoadSurveyById = (): LoadSurveyById => {
