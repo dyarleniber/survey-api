@@ -1,41 +1,20 @@
 import { DbAddAccount } from '@/data/use-cases/account/add-account/db-add-account';
 import {
   AccountModel,
-  AddAccountParams,
   AddAccountRepository,
   HashGenerator,
   LoadAccountByEmailRepository,
 } from '@/data/use-cases/account/add-account/db-add-account-protocols';
 import { mockAccountModel, mockAddAccountParams } from '@/tests/domain/mocks';
+import { mockHashGenerator, mockAddAccountRepository } from '@/tests/data/mocks';
 import { throwError } from '@/tests/helpers/test-helper';
 
-const makeHashGenerator = (): HashGenerator => {
-  class HashGeneratorStub implements HashGenerator {
-    async hash(_value: string): Promise<string> {
-      return 'hashed_password';
-    }
-  }
-
-  return new HashGeneratorStub();
-};
-
-const makeAddAccountRepository = (): AddAccountRepository => {
-  class AddAccountRepositoryStub implements AddAccountRepository {
-    async add(_account: AddAccountParams): Promise<AccountModel> {
-      return mockAccountModel();
-    }
-  }
-
-  return new AddAccountRepositoryStub();
-};
-
-const makeLoadAccountByEmailRepository = (): LoadAccountByEmailRepository => {
+const mockLoadAccountByEmailRepository = (): LoadAccountByEmailRepository => {
   class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
     async loadByEmail(_email: string): Promise<AccountModel | null> {
       return null;
     }
   }
-
   return new LoadAccountByEmailRepositoryStub();
 };
 
@@ -47,9 +26,9 @@ type SutTypes = {
 };
 
 const makeSut = (): SutTypes => {
-  const hashGeneratorStub = makeHashGenerator();
-  const addAccountRepositoryStub = makeAddAccountRepository();
-  const loadAccountByEmailRepositoryStub = makeLoadAccountByEmailRepository();
+  const hashGeneratorStub = mockHashGenerator();
+  const addAccountRepositoryStub = mockAddAccountRepository();
+  const loadAccountByEmailRepositoryStub = mockLoadAccountByEmailRepository();
   const sut = new DbAddAccount(
     hashGeneratorStub,
     addAccountRepositoryStub,

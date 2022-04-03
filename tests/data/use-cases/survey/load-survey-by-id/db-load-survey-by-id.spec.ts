@@ -2,20 +2,10 @@ import MockDate from 'mockdate';
 import { DbLoadSurveyById } from '@/data/use-cases/survey/load-survey-by-id/db-load-survey-by-id';
 import {
   LoadSurveyByIdRepository,
-  SurveyModel,
 } from '@/data/use-cases/survey/load-survey-by-id/db-load-survey-by-id-protocols';
 import { mockSurveyModel } from '@/tests/domain/mocks';
+import { mockLoadSurveyByIdRepository } from '@/tests/data/mocks';
 import { throwError } from '@/tests/helpers/test-helper';
-
-const makeLoadSurveyByIdRepository = (): LoadSurveyByIdRepository => {
-  class LoadSurveyByIdRepositoryStub implements LoadSurveyByIdRepository {
-    async loadById(_id: string): Promise<SurveyModel> {
-      return mockSurveyModel();
-    }
-  }
-
-  return new LoadSurveyByIdRepositoryStub();
-};
 
 type SutTypes = {
   sut: DbLoadSurveyById;
@@ -23,7 +13,7 @@ type SutTypes = {
 };
 
 const makeSut = (): SutTypes => {
-  const loadSurveyByIdRepositoryStub = makeLoadSurveyByIdRepository();
+  const loadSurveyByIdRepositoryStub = mockLoadSurveyByIdRepository();
   const sut = new DbLoadSurveyById(loadSurveyByIdRepositoryStub);
   return {
     sut,
