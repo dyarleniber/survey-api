@@ -4,24 +4,13 @@ import {
   LoadSurveyByIdRepository,
   SurveyModel,
 } from '@/data/use-cases/survey/load-survey-by-id/db-load-survey-by-id-protocols';
-
-const makeFakeSurvey = (): SurveyModel => ({
-  id: 'any_id',
-  question: 'any_question',
-  answers: [
-    {
-      image: 'any_image',
-      answer: 'any_answer',
-    },
-  ],
-  date: new Date(),
-  didAnswer: false,
-});
+import { mockSurveyModel } from '@/tests/domain/mocks/mock-survey';
+import { throwError } from '@/tests/helpers/test-helper';
 
 const makeLoadSurveyByIdRepository = (): LoadSurveyByIdRepository => {
   class LoadSurveyByIdRepositoryStub implements LoadSurveyByIdRepository {
     async loadById(_id: string): Promise<SurveyModel> {
-      return makeFakeSurvey();
+      return mockSurveyModel();
     }
   }
 
@@ -60,9 +49,7 @@ describe('DbLoadSurveyById Use case', () => {
 
   test('Should throw an error if LoadSurveyByIdRepository throws an error', async () => {
     const { sut, loadSurveyByIdRepositoryStub } = makeSut();
-    jest.spyOn(loadSurveyByIdRepositoryStub, 'loadById').mockImplementation(async () => {
-      throw new Error();
-    });
+    jest.spyOn(loadSurveyByIdRepositoryStub, 'loadById').mockImplementationOnce(throwError);
     const promise = sut.loadById('any_id');
     await expect(promise).rejects.toThrow();
   });
@@ -77,6 +64,6 @@ describe('DbLoadSurveyById Use case', () => {
   test('Should return a survey on success', async () => {
     const { sut } = makeSut();
     const survey = await sut.loadById('any_id');
-    expect(survey).toEqual(makeFakeSurvey());
+    expect(survey).toEqual(mockSurveyModel());
   });
 });

@@ -4,6 +4,8 @@ import {
   Decryptor,
   LoadAccountByTokenRepository,
 } from '@/data/use-cases/account/load-account-by-token/db-load-account-by-token-protocols';
+import { mockAccountModel } from '@/tests/domain/mocks';
+import { throwError } from '@/tests/helpers/test-helper';
 
 const makeDecryptor = (): Decryptor => {
   class DecryptorStub implements Decryptor {
@@ -15,17 +17,10 @@ const makeDecryptor = (): Decryptor => {
   return new DecryptorStub();
 };
 
-const makeFakeAccount = (): AccountModel => ({
-  id: 'valid_id',
-  name: 'valid_name',
-  email: 'valid_email@mail.com',
-  password: 'hashed_password',
-});
-
 const makeLoadAccountByTokenRepository = (): LoadAccountByTokenRepository => {
   class LoadAccountByTokenRepositoryStub implements LoadAccountByTokenRepository {
     async loadByToken(_accessToken: string, _role?: string): Promise<AccountModel> {
-      return makeFakeAccount();
+      return mockAccountModel();
     }
   }
 
@@ -62,9 +57,7 @@ describe('DbLoadAccountByToken Use case', () => {
 
   test('Should throw an error if Decryptor throws an error', async () => {
     const { sut, decryptorStub } = makeSut();
-    jest.spyOn(decryptorStub, 'decrypt').mockImplementation(async () => {
-      throw new Error();
-    });
+    jest.spyOn(decryptorStub, 'decrypt').mockImplementationOnce(throwError);
     const promise = sut.load('any_token', 'any_role');
     await expect(promise).rejects.toThrow();
   });
@@ -85,9 +78,7 @@ describe('DbLoadAccountByToken Use case', () => {
 
   test('Should throw an error if LoadAccountByTokenRepository throws an error', async () => {
     const { sut, loadAccountByTokenRepositoryStub } = makeSut();
-    jest.spyOn(loadAccountByTokenRepositoryStub, 'loadByToken').mockImplementation(async () => {
-      throw new Error();
-    });
+    jest.spyOn(loadAccountByTokenRepositoryStub, 'loadByToken').mockImplementationOnce(throwError);
     const promise = sut.load('any_token', 'any_role');
     await expect(promise).rejects.toThrow();
   });
@@ -102,6 +93,6 @@ describe('DbLoadAccountByToken Use case', () => {
   test('Should return an account on success', async () => {
     const { sut } = makeSut();
     const account = await sut.load('any_token', 'any_role');
-    expect(account).toEqual(makeFakeAccount());
+    expect(account).toEqual(mockAccountModel());
   });
 });

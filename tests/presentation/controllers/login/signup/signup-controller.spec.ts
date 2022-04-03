@@ -12,18 +12,13 @@ import { EmailInUseError, MissingParamError, ServerError } from '@/presentation/
 import {
   badRequest, forbidden, ok, serverError,
 } from '@/presentation/helpers/http/http-helpers';
-
-const makeFakeAccount = (): AccountModel => ({
-  id: 'valid_id',
-  name: 'valid_name',
-  email: 'any_email@mail.com',
-  password: 'any_password',
-});
+import { mockAccountModel } from '@/tests/domain/mocks';
+import { throwError } from '@/tests/helpers/test-helper';
 
 const makeAddAccount = (): AddAccount => {
   class AddAccountStub implements AddAccount {
     async add(_account: AddAccountParams): Promise<AccountModel> {
-      return makeFakeAccount();
+      return mockAccountModel();
     }
   }
 
@@ -93,9 +88,7 @@ describe('SignUp Controller', () => {
 
   test('Should return 500 if AddAccount throws an error', async () => {
     const { sut, addAccountStub } = makeSut();
-    jest.spyOn(addAccountStub, 'add').mockImplementation(async () => {
-      throw new Error();
-    });
+    jest.spyOn(addAccountStub, 'add').mockImplementationOnce(throwError);
     const httpResponse = await sut.handle(makeFakeRequest());
     expect(httpResponse).toEqual(serverError(new ServerError()));
   });
@@ -117,9 +110,7 @@ describe('SignUp Controller', () => {
 
   test('Should return 500 if Validation throws an error', async () => {
     const { sut, validationStub } = makeSut();
-    jest.spyOn(validationStub, 'validate').mockImplementation(() => {
-      throw new Error();
-    });
+    jest.spyOn(validationStub, 'validate').mockImplementationOnce(throwError);
     const httpResponse = await sut.handle(makeFakeRequest());
     expect(httpResponse).toEqual(serverError(new ServerError()));
   });
@@ -136,9 +127,7 @@ describe('SignUp Controller', () => {
 
   test('Should return 500 if Authentication throws an error', async () => {
     const { sut, authenticationStub } = makeSut();
-    jest.spyOn(authenticationStub, 'auth').mockImplementation(async () => {
-      throw new Error();
-    });
+    jest.spyOn(authenticationStub, 'auth').mockImplementationOnce(throwError);
     const httpResponse = await sut.handle(makeFakeRequest());
     expect(httpResponse).toEqual(serverError(new ServerError()));
   });

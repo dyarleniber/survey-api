@@ -9,6 +9,7 @@ import { MissingParamError, ServerError } from '@/presentation/errors';
 import {
   badRequest, ok, serverError, unauthorized,
 } from '@/presentation/helpers/http/http-helpers';
+import { throwError } from '@/tests/helpers/test-helper';
 
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
@@ -67,9 +68,7 @@ describe('Login Controller', () => {
 
   test('Should return 500 if Authentication throws an error', async () => {
     const { sut, authenticationStub } = makeSut();
-    jest.spyOn(authenticationStub, 'auth').mockImplementation(async () => {
-      throw new Error();
-    });
+    jest.spyOn(authenticationStub, 'auth').mockImplementationOnce(throwError);
     const httpResponse = await sut.handle(makeFakeRequest());
     expect(httpResponse).toEqual(serverError(new ServerError()));
   });
@@ -104,9 +103,7 @@ describe('Login Controller', () => {
 
   test('Should return 500 if Validation throws an error', async () => {
     const { sut, validationStub } = makeSut();
-    jest.spyOn(validationStub, 'validate').mockImplementation(() => {
-      throw new Error();
-    });
+    jest.spyOn(validationStub, 'validate').mockImplementationOnce(throwError);
     const httpResponse = await sut.handle(makeFakeRequest());
     expect(httpResponse).toEqual(serverError(new ServerError()));
   });

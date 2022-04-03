@@ -10,31 +10,14 @@ import {
 } from '@/presentation/controllers/survey-result/save-survey-result/save-survey-result-controller-protocols';
 import { InvalidParamError, ServerError } from '@/presentation/errors';
 import { forbidden, ok, serverError } from '@/presentation/helpers/http/http-helpers';
-
-const makeFakeSurvey = (): SurveyModel => ({
-  id: 'any_id',
-  question: 'any_question',
-  answers: [
-    {
-      image: 'any_image',
-      answer: 'any_answer',
-    },
-  ],
-  date: new Date(),
-});
-
-const makeFakeSurveyResult = (): SurveyResultModel => ({
-  id: 'any_id',
-  surveyId: 'any_survey_id',
-  accountId: 'any_account_id',
-  answer: 'any_answer',
-  date: new Date(),
-});
+import { mockSurveyModel } from '@/tests/domain/mocks/mock-survey';
+import { mockSurveyResultModel } from '@/tests/domain/mocks/mock-survey-result';
+import { throwError } from '@/tests/helpers/test-helper';
 
 const makeLoadSurveyById = (): LoadSurveyById => {
   class LoadSurveyByIdStub implements LoadSurveyById {
     async loadById(_id: string): Promise<SurveyModel> {
-      return makeFakeSurvey();
+      return mockSurveyModel();
     }
   }
 
@@ -44,7 +27,7 @@ const makeLoadSurveyById = (): LoadSurveyById => {
 const makeSaveSurveyResult = (): SaveSurveyResult => {
   class SaveSurveyResultStub implements SaveSurveyResult {
     async save(_survey: SaveSurveyResultParams): Promise<SurveyResultModel> {
-      return makeFakeSurveyResult();
+      return mockSurveyResultModel();
     }
   }
 
@@ -107,9 +90,7 @@ describe('SaveSurveyResult Controller', () => {
 
   test('Should return 500 if LoadSurveyById throws an error', async () => {
     const { sut, loadSurveyByIdStub } = makeSut();
-    jest.spyOn(loadSurveyByIdStub, 'loadById').mockImplementation(async () => {
-      throw new Error();
-    });
+    jest.spyOn(loadSurveyByIdStub, 'loadById').mockImplementationOnce(throwError);
     const httpResponse = await sut.handle(makeFakeRequest());
     expect(httpResponse).toEqual(serverError(new ServerError()));
   });
@@ -142,9 +123,7 @@ describe('SaveSurveyResult Controller', () => {
 
   test('Should return 500 if SaveSurveyResult throws an error', async () => {
     const { sut, saveSurveyResultStub } = makeSut();
-    jest.spyOn(saveSurveyResultStub, 'save').mockImplementation(async () => {
-      throw new Error();
-    });
+    jest.spyOn(saveSurveyResultStub, 'save').mockImplementationOnce(throwError);
     const httpResponse = await sut.handle(makeFakeRequest());
     expect(httpResponse).toEqual(serverError(new ServerError()));
   });
@@ -152,6 +131,6 @@ describe('SaveSurveyResult Controller', () => {
   test('Should return 200 on success', async () => {
     const { sut } = makeSut();
     const httpResponse = await sut.handle(makeFakeRequest());
-    expect(httpResponse).toEqual(ok(makeFakeSurveyResult()));
+    expect(httpResponse).toEqual(ok(mockSurveyResultModel()));
   });
 });
