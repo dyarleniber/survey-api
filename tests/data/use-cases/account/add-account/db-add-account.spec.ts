@@ -1,22 +1,12 @@
 import { DbAddAccount } from '@/data/use-cases/account/add-account/db-add-account';
 import {
-  AccountModel,
   AddAccountRepository,
   HashGenerator,
   LoadAccountByEmailRepository,
 } from '@/data/use-cases/account/add-account/db-add-account-protocols';
 import { mockAccountModel, mockAddAccountParams } from '@/tests/domain/mocks';
-import { mockHashGenerator, mockAddAccountRepository } from '@/tests/data/mocks';
+import { mockHashGenerator, mockAddAccountRepository, mockLoadAccountByEmailRepository } from '@/tests/data/mocks';
 import { throwError } from '@/tests/helpers/test-helper';
-
-const mockLoadAccountByEmailRepository = (): LoadAccountByEmailRepository => {
-  class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
-    async loadByEmail(_email: string): Promise<AccountModel | null> {
-      return null;
-    }
-  }
-  return new LoadAccountByEmailRepositoryStub();
-};
 
 type SutTypes = {
   sut: DbAddAccount;
@@ -29,6 +19,7 @@ const makeSut = (): SutTypes => {
   const hashGeneratorStub = mockHashGenerator();
   const addAccountRepositoryStub = mockAddAccountRepository();
   const loadAccountByEmailRepositoryStub = mockLoadAccountByEmailRepository();
+  jest.spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail').mockReturnValue(Promise.resolve(null));
   const sut = new DbAddAccount(
     hashGeneratorStub,
     addAccountRepositoryStub,
