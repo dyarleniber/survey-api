@@ -1,6 +1,7 @@
 import { Collection } from 'mongodb';
 import { AccountMongoRepository } from '@/infra/db/mongodb/account/account-mongo-repository';
 import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper';
+import { mockAddAccountParams } from '@/tests/domain/mocks';
 
 const makeSut = (): AccountMongoRepository => new AccountMongoRepository();
 
@@ -23,33 +24,25 @@ describe('Account Mongo Repository', () => {
   describe('add()', () => {
     test('Should return an account on add success', async () => {
       const sut = makeSut();
-      const account = await sut.add({
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        password: 'hashed_password',
-      });
+      const account = await sut.add(mockAddAccountParams());
       expect(account).toBeTruthy();
       expect(account.id).toBeTruthy();
       expect(account.name).toBe('any_name');
       expect(account.email).toBe('any_email@mail.com');
-      expect(account.password).toBe('hashed_password');
+      expect(account.password).toBe('any_password');
     });
   });
 
   describe('loadByEmail()', () => {
     test('Should return an account on loadByEmail success', async () => {
       const sut = makeSut();
-      await accountCollection.insertOne({
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        password: 'hashed_password',
-      });
+      await accountCollection.insertOne(mockAddAccountParams());
       const account = await sut.loadByEmail('any_email@mail.com');
       expect(account).toBeTruthy();
       expect(account?.id).toBeTruthy();
       expect(account?.name).toBe('any_name');
       expect(account?.email).toBe('any_email@mail.com');
-      expect(account?.password).toBe('hashed_password');
+      expect(account?.password).toBe('any_password');
     });
 
     test('Should return null if loadByEmail fails', async () => {
@@ -62,11 +55,7 @@ describe('Account Mongo Repository', () => {
   describe('updateAccessToken()', () => {
     test('Should update the access token on updateAccessToken success', async () => {
       const sut = makeSut();
-      const { insertedId } = await accountCollection.insertOne({
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        password: 'hashed_password',
-      });
+      const { insertedId } = await accountCollection.insertOne(mockAddAccountParams());
       await sut.updateAccessToken(insertedId.toHexString(), 'any_token');
       const account = await accountCollection.findOne({ _id: insertedId });
       expect(account).toBeTruthy();
@@ -78,9 +67,7 @@ describe('Account Mongo Repository', () => {
     test('Should return an account on loadByToken without role', async () => {
       const sut = makeSut();
       await accountCollection.insertOne({
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        password: 'hashed_password',
+        ...mockAddAccountParams(),
         accessToken: 'any_token',
       });
       const account = await sut.loadByToken('any_token');
@@ -88,15 +75,13 @@ describe('Account Mongo Repository', () => {
       expect(account?.id).toBeTruthy();
       expect(account?.name).toBe('any_name');
       expect(account?.email).toBe('any_email@mail.com');
-      expect(account?.password).toBe('hashed_password');
+      expect(account?.password).toBe('any_password');
     });
 
     test('Should return an account on loadByToken with admin role', async () => {
       const sut = makeSut();
       await accountCollection.insertOne({
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        password: 'hashed_password',
+        ...mockAddAccountParams(),
         accessToken: 'any_token',
         role: 'admin',
       });
@@ -105,15 +90,13 @@ describe('Account Mongo Repository', () => {
       expect(account?.id).toBeTruthy();
       expect(account?.name).toBe('any_name');
       expect(account?.email).toBe('any_email@mail.com');
-      expect(account?.password).toBe('hashed_password');
+      expect(account?.password).toBe('any_password');
     });
 
     test('Should return null on loadByToken with invalid role', async () => {
       const sut = makeSut();
       await accountCollection.insertOne({
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        password: 'hashed_password',
+        ...mockAddAccountParams(),
         accessToken: 'any_token',
       });
       const account = await sut.loadByToken('any_token', 'admin');
@@ -123,9 +106,7 @@ describe('Account Mongo Repository', () => {
     test('Should return an account on loadByToken if user is admin', async () => {
       const sut = makeSut();
       await accountCollection.insertOne({
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        password: 'hashed_password',
+        ...mockAddAccountParams(),
         accessToken: 'any_token',
         role: 'admin',
       });
@@ -134,7 +115,7 @@ describe('Account Mongo Repository', () => {
       expect(account?.id).toBeTruthy();
       expect(account?.name).toBe('any_name');
       expect(account?.email).toBe('any_email@mail.com');
-      expect(account?.password).toBe('hashed_password');
+      expect(account?.password).toBe('any_password');
     });
 
     test('Should return null if loadByToken fails', async () => {

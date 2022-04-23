@@ -2,22 +2,11 @@ import MockDate from 'mockdate';
 import { LoadSurveysController } from '@/presentation/controllers/survey/load-surveys/load-surveys-controller';
 import {
   LoadSurveys,
-  SurveyModel,
 } from '@/presentation/controllers/survey/load-surveys/load-surveys-controller-protocols';
 import { ServerError } from '@/presentation/errors';
 import { noContent, ok, serverError } from '@/presentation/helpers/http/http-helpers';
-import { mockSurveyModels } from '@/tests/domain/mocks';
+import { mockLoadSurveys, mockSurveyModels } from '@/tests/domain/mocks';
 import { throwError } from '@/tests/helpers/test-helper';
-
-const makeLoadSurveys = (): LoadSurveys => {
-  class LoadSurveysStub implements LoadSurveys {
-    async load(): Promise<SurveyModel[]> {
-      return Promise.resolve(mockSurveyModels());
-    }
-  }
-
-  return new LoadSurveysStub();
-};
 
 type SutTypes = {
   sut: LoadSurveysController;
@@ -25,7 +14,7 @@ type SutTypes = {
 };
 
 const makeSut = (): SutTypes => {
-  const loadSurveysStub = makeLoadSurveys();
+  const loadSurveysStub = mockLoadSurveys();
   const sut = new LoadSurveysController(loadSurveysStub);
   return {
     sut,
