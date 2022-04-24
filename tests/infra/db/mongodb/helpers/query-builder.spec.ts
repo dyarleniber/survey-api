@@ -19,6 +19,7 @@ describe('Query builder', () => {
     const unwind = '$any_field';
     const addFields = { field: '$any_field' };
     const project = { field: 1, any_field: '$any_value' };
+    const sort = { field: 1 };
     const query = sut
       .match(match)
       .group(group)
@@ -26,6 +27,7 @@ describe('Query builder', () => {
       .unwind(unwind)
       .addFields(addFields)
       .project(project)
+      .sort(sort)
       .build();
     expect(query).toBeTruthy();
     expect(query.sort()).toEqual([
@@ -35,6 +37,7 @@ describe('Query builder', () => {
       { $unwind: unwind },
       { $addFields: addFields },
       { $project: project },
+      { $sort: sort },
     ].sort());
   });
 });
