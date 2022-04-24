@@ -49,15 +49,17 @@ describe('SurveyResult Mongo Repository', () => {
         date: new Date(),
       });
       expect(surveyResult).toBeTruthy();
-      expect(surveyResult.id).toBeTruthy();
-      expect(surveyResult.answer).toBe('any_answer');
+      expect(surveyResult.surveyId).toEqual(surveyId.toHexString());
+      expect(surveyResult.answers[0].answer).toBe('any_answer');
+      expect(surveyResult.answers[0].count).toBe(1);
+      expect(surveyResult.answers[0].percent).toBe(100);
     });
 
     test('Should update survey result if it is not new', async () => {
       const surveyId = await makeSurvey();
       const accountId = await makeAccount();
       const sut = makeSut();
-      const { insertedId } = await surveyResultCollection.insertOne({
+      await surveyResultCollection.insertOne({
         surveyId,
         accountId,
         answer: 'any_answer',
@@ -70,8 +72,10 @@ describe('SurveyResult Mongo Repository', () => {
         date: new Date(),
       });
       expect(surveyResult).toBeTruthy();
-      expect(surveyResult.id).toEqual(insertedId.toHexString());
-      expect(surveyResult.answer).toBe('other_answer');
+      expect(surveyResult.surveyId).toEqual(surveyId.toHexString());
+      expect(surveyResult.answers[0].answer).toBe('other_answer');
+      expect(surveyResult.answers[0].count).toBe(1);
+      expect(surveyResult.answers[0].percent).toBe(100);
     });
   });
 });
