@@ -1,8 +1,8 @@
-import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper';
+import { MongoHelper } from '@/infra/db/mongodb/helpers';
 
 const makeSut = () => MongoHelper;
 
-describe('Mongo Helper', () => {
+describe('Mongo helper', () => {
   beforeAll(async (): Promise<void> => {
     await MongoHelper.connect(<string>process.env.MONGO_URL);
   });
