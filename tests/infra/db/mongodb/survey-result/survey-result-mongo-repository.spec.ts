@@ -42,19 +42,17 @@ describe('SurveyResult Mongo Repository', () => {
       const surveyId = await makeSurvey();
       const accountId = await makeAccount();
       const sut = makeSut();
-      const surveyResult = await sut.save({
+      await sut.save({
         surveyId: surveyId.toHexString(),
         accountId: accountId.toHexString(),
         answer: 'any_answer',
         date: new Date(),
       });
+      const surveyResult = await surveyResultCollection.findOne({
+        surveyId,
+        accountId,
+      });
       expect(surveyResult).toBeTruthy();
-      expect(surveyResult.surveyId).toEqual(surveyId.toHexString());
-      expect(surveyResult.answers[0].answer).toBe('any_answer');
-      expect(surveyResult.answers[0].count).toBe(1);
-      expect(surveyResult.answers[0].percent).toBe(100);
-      expect(surveyResult.answers[1].count).toBe(0);
-      expect(surveyResult.answers[1].percent).toBe(0);
     });
 
     test('Should update survey result if it is not new', async () => {
@@ -67,19 +65,42 @@ describe('SurveyResult Mongo Repository', () => {
         answer: 'any_answer',
         date: new Date(),
       });
-      const surveyResult = await sut.save({
+      await sut.save({
         surveyId: surveyId.toHexString(),
         accountId: accountId.toHexString(),
         answer: 'other_answer',
         date: new Date(),
       });
+      const surveyResult = await surveyResultCollection
+        .find({
+          surveyId,
+          accountId,
+        })
+        .toArray();
       expect(surveyResult).toBeTruthy();
-      expect(surveyResult.surveyId).toEqual(surveyId.toHexString());
-      expect(surveyResult.answers[0].answer).toBe('other_answer');
-      expect(surveyResult.answers[0].count).toBe(1);
-      expect(surveyResult.answers[0].percent).toBe(100);
-      expect(surveyResult.answers[1].count).toBe(0);
-      expect(surveyResult.answers[1].percent).toBe(0);
+      expect(surveyResult.length).toBe(1);
+    });
+  });
+
+  describe('loadBySurveyId()', () => {
+    test('Should load a survey result on loadBySurveyId success', async () => {
+      const surveyId = await makeSurvey();
+      const accountId = await makeAccount();
+      const sut = makeSut();
+      await surveyResultCollection.insertOne({
+        surveyId,
+        accountId,
+        answer: 'any_answer',
+        date: new Date(),
+      });
+      const surveyResult = await sut.loadBySurveyId(surveyId.toHexString());
+      expect(surveyResult).toBeTruthy();
+      expect(surveyResult?.surveyId).toEqual(surveyId.toHexString());
+      expect(surveyResult?.answers[0].answer).toBe('any_answer');
+      expect(surveyResult?.answers[0].count).toBe(1);
+      expect(surveyResult?.answers[0].percent).toBe(100);
+      expect(surveyResult?.answers[1].count).toBe(0);
+      expect(surveyResult?.answers[1].percent).toBe(0);
     });
   });
 });

@@ -1,15 +1,18 @@
 import { Collection, ObjectId } from 'mongodb';
 import { SaveSurveyResultRepository } from '@/data/protocols/db/survey-result/save-survey-result-repository';
+import { LoadSurveyResultRepository } from '@/data/protocols/db/survey-result/load-survey-result-repository';
 import { SaveSurveyResultParams } from '@/domain/use-cases/survey-result/save-survey-result';
 import { SurveyResultModel } from '@/domain/models/survey-result';
 import { MongoHelper, QueryBuilder } from '@/infra/db/mongodb/helpers';
 
-export class SurveyResultMongoRepository implements SaveSurveyResultRepository {
+export class SurveyResultMongoRepository implements
+  SaveSurveyResultRepository,
+  LoadSurveyResultRepository {
   private async getCollection(): Promise<Collection> {
     return MongoHelper.getCollection('surveyResults');
   }
 
-  async save(surveyData: SaveSurveyResultParams): Promise<SurveyResultModel> {
+  async save(surveyData: SaveSurveyResultParams): Promise<void> {
     const surveyResultCollection = await this.getCollection();
     await surveyResultCollection.findOneAndUpdate(
       {
@@ -27,10 +30,9 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository {
         returnDocument: 'after',
       },
     );
-    return this.loadBySurveyId(surveyData.surveyId);
   }
 
-  private async loadBySurveyId(surveyId: string): Promise<SurveyResultModel> {
+  async loadBySurveyId(surveyId: string): Promise<SurveyResultModel | null> {
     const surveyResultCollection = await this.getCollection();
     const query = new QueryBuilder()
       .match({
@@ -42,7 +44,7 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository {
         // Groups input documents by the specified _id,
         // in this case the $group stage
         // calculates accumulated values for all the input documents.
-        _id: null,
+        _id: 0,
         // Save all fields of the document in an array (data).
         // $$ROOT references the root document, i.e. the top-level document,
         // currently being processed in the aggregation pipeline stage.
@@ -76,7 +78,7 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository {
       // $project passes along the documents with the requested fields
       // to the next stage in the pipeline.
       .project({
-        _id: null,
+        _id: 0,
         surveyId: '$_id.surveyId',
         question: '$_id.question',
         date: '$_id.date',
@@ -124,7 +126,7 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository {
         },
       })
       .project({
-        _id: null,
+        _id: 0,
         surveyId: '$_id.surveyId',
         question: '$_id.question',
         date: '$_id.date',
@@ -151,7 +153,7 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository {
         percent: { $sum: '$answers.percent' },
       })
       .project({
-        _id: null,
+        _id: 0,
         surveyId: '$_id.surveyId',
         question: '$_id.question',
         date: '$_id.date',
@@ -176,7 +178,7 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository {
         },
       })
       .project({
-        _id: null,
+        _id: 0,
         surveyId: '$_id.surveyId',
         question: '$_id.question',
         date: '$_id.date',
@@ -186,6 +188,6 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository {
     const [surveyResult] = await surveyResultCollection
       .aggregate(query)
       .toArray();
-    return <SurveyResultModel>MongoHelper.map(surveyResult);
+    return surveyResult && <SurveyResultModel>MongoHelper.map(surveyResult);
   }
 }
