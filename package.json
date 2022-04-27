@@ -5,7 +5,7 @@
   "main": "dist/main/server.js",
   "scripts": {
     "start": "node dist/main/server.js",
-    "build": "rimraf dist && tsc -p tsconfig-build.json",
+    "build": "rimraf dist && tsc -p tsconfig-build.json && copyfiles -u 1 public/**/* dist/static/",
     "build:watch": "npm run build -- --watch",
     "debug": "nodemon -L --watch ./dist --inspect=0.0.0.0:9222 --nolazy ./dist/main/server.js",
     "up": "concurrently --kill-others-on-fail \"npm run build:watch\" \"docker-compose up\"",
@@ -34,6 +34,7 @@
     "@typescript-eslint/eslint-plugin": "^5.6.0",
     "@typescript-eslint/parser": "^5.6.0",
     "concurrently": "^6.4.0",
+    "copyfiles": "^2.4.1",
     "eslint": "^8.4.1",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-airbnb-typescript": "^16.1.0",
