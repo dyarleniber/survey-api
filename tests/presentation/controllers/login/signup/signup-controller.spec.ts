@@ -9,7 +9,7 @@ import { EmailInUseError, MissingParamError, ServerError } from '@/presentation/
 import {
   badRequest, forbidden, ok, serverError,
 } from '@/presentation/helpers/http/http-helpers';
-import { mockAddAccount, mockAuthentication } from '@/tests/domain/mocks';
+import { mockAddAccount, mockAuthentication, mockAuthenticationModel } from '@/tests/domain/mocks';
 import { mockValidation } from '@/tests/presentation/mocks';
 import { throwError } from '@/tests/helpers/test-helper';
 
@@ -110,6 +110,6 @@ describe('SignUp Controller', () => {
   test('Should return 200 if valid data is provided', async () => {
     const { sut } = makeSut();
     const httpResponse = await sut.handle(mockRequest());
-    expect(httpResponse).toEqual(ok({ accessToken: 'any_token' }));
+    expect(httpResponse).toEqual(ok(mockAuthenticationModel()));
   });
 });

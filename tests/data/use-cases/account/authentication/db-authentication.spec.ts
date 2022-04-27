@@ -5,7 +5,7 @@ import {
   LoadAccountByEmailRepository,
   UpdateAccessTokenRepository,
 } from '@/data/use-cases/account/authentication/db-authentication-protocols';
-import { mockAuthenticationParams } from '@/tests/domain/mocks';
+import { mockAuthenticationModel, mockAuthenticationParams } from '@/tests/domain/mocks';
 import {
   mockHashComparer,
   mockEncryptor,
@@ -60,8 +60,8 @@ describe('DbAuthentication UseCase', () => {
   test('Should return null if LoadAccountByEmailRepository returns null', async () => {
     const { sut, loadAccountByEmailRepositoryStub } = makeSut();
     jest.spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail').mockReturnValueOnce(Promise.resolve(null));
-    const accessToken = await sut.auth(mockAuthenticationParams());
-    expect(accessToken).toBeNull();
+    const authentication = await sut.auth(mockAuthenticationParams());
+    expect(authentication).toBeNull();
   });
 
   test('Should call HashComparer with correct values', async () => {
@@ -81,8 +81,8 @@ describe('DbAuthentication UseCase', () => {
   test('Should return null if HashComparer returns false', async () => {
     const { sut, hashComparerStub } = makeSut();
     jest.spyOn(hashComparerStub, 'compare').mockReturnValueOnce(Promise.resolve(false));
-    const accessToken = await sut.auth(mockAuthenticationParams());
-    expect(accessToken).toBeNull();
+    const authentication = await sut.auth(mockAuthenticationParams());
+    expect(authentication).toBeNull();
   });
 
   test('Should call Encryptor with correct id', async () => {
@@ -99,10 +99,10 @@ describe('DbAuthentication UseCase', () => {
     await expect(promise).rejects.toThrow();
   });
 
-  test('Should return a token on success', async () => {
+  test('Should return an AuthenticationModel on success', async () => {
     const { sut } = makeSut();
-    const accessToken = await sut.auth(mockAuthenticationParams());
-    expect(accessToken).toBe('any_token');
+    const authentication = await sut.auth(mockAuthenticationParams());
+    expect(authentication).toEqual(mockAuthenticationModel());
   });
 
   test('Should call UpdateAccessTokenRepository with correct values', async () => {
