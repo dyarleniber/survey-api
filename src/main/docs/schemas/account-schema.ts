@@ -7,6 +7,9 @@ export const accountSchema = {
     name: {
       type: 'string',
     },
+    email: {
+      type: 'string',
+    },
   },
-  required: ['accessToken', 'name'],
+  required: ['accessToken', 'name', 'email'],
 };
