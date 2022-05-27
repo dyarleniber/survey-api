@@ -1,6 +1,6 @@
 {
   "name": "survey-api",
-  "version": "2.6.1",
+  "version": "2.6.2",
   "description": "",
   "main": "dist/main/server.js",
   "scripts": {
