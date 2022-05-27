@@ -9,11 +9,13 @@ export const mockSurveyResultModel = (): SurveyResultModel => ({
     answer: 'any_answer',
     count: 1,
     percent: 50,
+    isCurrentAccountAnswer: false,
   }, {
     answer: 'other_answer',
     image: 'any_image',
     count: 1,
     percent: 50,
+    isCurrentAccountAnswer: false,
   }],
   date: new Date(),
 });
@@ -26,6 +28,7 @@ export const mockEmptySurveyResultModel = (): SurveyResultModel => ({
     answer: 'any_answer',
     count: 0,
     percent: 0,
+    isCurrentAccountAnswer: false,
   }],
   date: new Date(),
 });
@@ -48,7 +51,7 @@ export const mockSaveSurveyResult = (): SaveSurveyResult => {
 
 export const mockLoadSurveyResult = (): LoadSurveyResult => {
   class LoadSurveyResultStub implements LoadSurveyResult {
-    async load(_surveyId: string): Promise<SurveyResultModel> {
+    async load(_surveyId: string, _accountId: string): Promise<SurveyResultModel> {
       return mockSurveyResultModel();
     }
   }

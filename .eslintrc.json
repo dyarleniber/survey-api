@@ -17,7 +17,12 @@
     "plugins": [
         "@typescript-eslint"
     ],
-    "ignorePatterns": ["jest.config.js"],
+    "ignorePatterns": [
+        "jest.config.js",
+        "jest-integration.config.js",
+        "jest-mongodb-config.js",
+        "jest-unit.config.js"
+    ],
     "settings": {
         "import/resolver": {
             "node": {

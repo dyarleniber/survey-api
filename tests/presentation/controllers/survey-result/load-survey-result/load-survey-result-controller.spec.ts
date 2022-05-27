@@ -14,6 +14,7 @@ const mockRequest = (): HttpRequest => ({
   params: {
     surveyId: 'any_survey_id',
   },
+  accountId: 'any_account_id',
 });
 
 type SutTypes = {
@@ -72,7 +73,7 @@ describe('LoadSurveyResult Controller', () => {
     const loadSpy = jest.spyOn(loadSurveyResultStub, 'load');
     const httpRequest = mockRequest();
     await sut.handle(httpRequest);
-    expect(loadSpy).toHaveBeenCalledWith(httpRequest.params.surveyId);
+    expect(loadSpy).toHaveBeenCalledWith(httpRequest.params.surveyId, httpRequest.accountId);
   });
 
   test('Should return 500 if LoadSurveyResult throws an error', async () => {
